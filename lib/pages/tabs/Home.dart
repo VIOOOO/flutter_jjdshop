@@ -3,6 +3,9 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 import '../../services/ScreenAdaper.dart';
 
+import '../../model/FocusModel.dart';
+import 'dart:convert';
+
 // 首页
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -12,6 +15,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    var str =
+        '{"_id":"59f6ef443ce1fb0fb02c7a43","title":"笔记本电脑","status":"1","url":"12"}';
+    // 将json 数据序列化
+    var focus = FocusModel.fromJson(json.decode(str));
+    print(focus.sId);
+    print(focus.title);
+  }
+
   // 轮播组件
   Widget _swiperWidget() {
     // 预设轮播图，后期用接口数据代替
