@@ -67,6 +67,42 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //热门商品
+  Widget _hotProductListWidget() {
+    return Container(
+      // 外部高度设置要大于内部子元素高度之和
+      height: ScreenAdaper.height(240),
+      // width: double.infinity,
+      padding: EdgeInsets.all(ScreenAdaper.width(20)),
+      child: ListView.builder(
+        // 水平列表
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (contxt, index) {
+          return Column(
+            children: <Widget>[
+              Container(
+                height: ScreenAdaper.height(140),
+                width: ScreenAdaper.width(140),
+                margin: EdgeInsets.only(right: ScreenAdaper.width(21)),
+                child: Image.network(
+                  'https://www.itying.com/images/flutter/hot${index + 1}.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: ScreenAdaper.height(10)),
+                height: ScreenAdaper.height(44),
+                child: Text("第${index + 1}条"),
+              )
+            ],
+          );
+        },
+        // 循环次数
+        itemCount: 10,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 屏幕适配需要放在 build 方法内，才能获取到 context
@@ -76,10 +112,13 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       children: <Widget>[
         _swiperWidget(),
-        SizedBox(height: ScreenAdaper.height(10)),
-        _titleWidget('差你喜欢'),
-        SizedBox(height: ScreenAdaper.height(10)),
-        _titleWidget('今晚吃烤肉')
+        SizedBox(height: ScreenAdaper.height(20)),
+        _titleWidget("猜你喜欢"),
+         SizedBox(height: ScreenAdaper.height(20)),
+         _hotProductListWidget(),
+         SizedBox(height: ScreenAdaper.height(20)),
+        _titleWidget("热门推荐"),
+       
       ],
     );
   }
