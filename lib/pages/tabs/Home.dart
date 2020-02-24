@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../services/ScreenAdaper.dart';
+
 // 首页
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -43,15 +45,15 @@ class _HomePageState extends State<HomePage> {
   // 公共楼层标题组件
   Widget _titleWidget(value) {
     return Container(
-      height: ScreenUtil().setHeight(32),
-      margin: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
-      padding: EdgeInsets.only(left: ScreenUtil().setWidth(20)),
+      height: ScreenAdaper.height(32),
+      margin: EdgeInsets.only(left: ScreenAdaper.width(20)),
+      padding: EdgeInsets.only(left: ScreenAdaper.width(20)),
       decoration: BoxDecoration(
         border: Border(
           // 左边竖线
           left: BorderSide(
             color: Colors.red,
-            width: 4,
+            width: ScreenAdaper.width(10),
           ),
         ),
       ),
@@ -69,13 +71,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // 屏幕适配需要放在 build 方法内，才能获取到 context
     // 并传入设计稿的宽高
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
+    // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
+    ScreenAdaper.init(context);
     return ListView(
       children: <Widget>[
         _swiperWidget(),
-        SizedBox(height: 10),
+        SizedBox(height: ScreenAdaper.height(10)),
         _titleWidget('差你喜欢'),
-        SizedBox(height: 10),
+        SizedBox(height: ScreenAdaper.height(10)),
         _titleWidget('今晚吃烤肉')
       ],
     );
