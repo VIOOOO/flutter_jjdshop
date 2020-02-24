@@ -19,7 +19,7 @@ class _TabsState extends State<Tabs> {
   List _pageList = [
     HomePage(),
     CategoryPage(),
-    Card(),
+    CartPage(),
     UserPage(),
   ];
   @override
@@ -42,22 +42,24 @@ class _TabsState extends State<Tabs> {
         },
         // tab 超过3个时候需要添加该属性
         type: BottomNavigationBarType.fixed,
+        // 选中的 tab 颜色
+        fixedColor: Colors.red,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             title: Text('首页'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('首页'),
+            icon: Icon(Icons.category),
+            title: Text('分类'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('首页'),
+            icon: Icon(Icons.shopping_cart),
+            title: Text('购物车'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('首页'),
+            icon: Icon(Icons.people),
+            title: Text('我的'),
           ),
         ],
       ),
