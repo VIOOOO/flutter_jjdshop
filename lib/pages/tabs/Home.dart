@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-
 import '../../services/ScreenAdaper.dart';
-
-import '../../model/FocusModel.dart';
 import 'dart:convert';
+
+// 轮播图类模型
+import '../../model/FocusModel.dart';
+
+import 'package:dio/dio.dart';
 
 // 首页
 class HomePage extends StatefulWidget {
@@ -15,45 +17,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // 定义变量接收 轮播数据
+  List _focusData = [];
   @override
   void initState() {
     super.initState();
+    this._getFocusData();
+  }
 
-    var str =
-        '{"_id":"59f6ef443ce1fb0fb02c7a43","title":"笔记本电脑","status":"1","url":"12"}';
-    // 将json 数据序列化
-    var focus = FocusModel.fromJson(json.decode(str));
-    print(focus.sId);
-    print(focus.title);
+  // 轮播接口数据
+  _getFocusData() async {
+    var api = 'http://jd.itying.com/api/focus';
+    var reslut = await Dio().get(api);
+    // print(reslut.data is Map);
+    // 集合类型的类对象，通过模型类序列化 json
+    var focusList = FocusModel.fromJson(reslut.data);
+    // 循环变量
+    focusList.result.forEach((value) {
+      // print(value.title);
+      // print(value.pic);
+    });
+    setState(() {
+      this._focusData = focusList.result;
+    });
   }
 
   // 轮播组件
   Widget _swiperWidget() {
-    // 预设轮播图，后期用接口数据代替
-    List<Map> imgList = [
-      {"url": "https://www.itying.com/images/flutter/slide01.jpg"},
-      {"url": "https://www.itying.com/images/flutter/slide02.jpg"},
-      {"url": "https://www.itying.com/images/flutter/slide03.jpg"},
-    ];
-    // 轮播图需要在外层包裹一个设置宽高的容器，或者宽高比例的容器，设置固定宽高容易出现变形
-    return Container(
-      child: AspectRatio(
-        // 宽高比例，在不同设备都不会变形固定比例
-        aspectRatio: 2 / 1,
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            return new Image.network(
-              imgList[index]['url'],
-              fit: BoxFit.fill,
-            );
-          },
-          // 轮播个数
-          itemCount: 3,
-          pagination: new SwiperPagination(),
-          // autoplay: true,
+    // // 预设轮播图，后期用接口数据代替
+    // List<Map> imgList = [
+    //   {"url": "https://www.itying.com/images/flutter/slide01.jpg"},
+    //   {"url": "https://www.itying.com/images/flutter/slide02.jpg"},
+    //   {"url": "https://www.itying.com/images/flutter/slide03.jpg"},
+    // ];
+
+    if (this._focusData.length > 0) {
+      // 轮播图需要在外层包裹一个设置宽高的容器，或者宽高比例的容器，设置固定宽高容易出现变形
+      return Container(
+        child: AspectRatio(
+          // 宽高比例，在不同设备都不会变形固定比例
+          aspectRatio: 2 / 1,
+          child: Swiper(
+            itemBuilder: (BuildContext context, int index) {
+              String pic = this._focusData[index].pic;
+              return new Image.network(
+                // imgList[index]['url'],
+                // 因为 flutter 不会像浏览器自己处理斜线，所以需要转义符号，将链接内的 右斜线 换成 左斜线
+                "http://jd.itying.com/${pic.replaceAll('\\', '/')}",
+                fit: BoxFit.fill,
+              );
+            },
+            // 轮播个数
+            // itemCount: imgList.length,
+            itemCount: this._focusData.length,
+            pagination: new SwiperPagination(),
+            // autoplay: true,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      // 无数据也要返回 Widget 组件
+      return Text('加载中...');
+    }
   }
 
   // 公共楼层标题组件
