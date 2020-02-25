@@ -130,7 +130,14 @@ class _CategoryPageState extends State<CategoryPage>
                 pic = Config.domain + pic.replaceAll('\\', '/');
 
                 // 返回每一个元素
-                return Container(
+                return InkWell(
+                  onTap: (){
+                    // 点击元素跳转 传递ID
+                    Navigator.pushNamed(context, '/prouctListPage',arguments: {
+                      "cid":this._rightCateList[index].sId
+                    });
+                  },
+                  child: Container(
                   child: Column(
                     children: <Widget>[
                       // 配置图片宽高比
@@ -145,6 +152,7 @@ class _CategoryPageState extends State<CategoryPage>
                       )
                     ],
                   ),
+                ),
                 );
               }),
         ),

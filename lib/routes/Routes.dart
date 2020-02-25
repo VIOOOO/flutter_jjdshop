@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // 命名路由 引入需要跳转的页面进行路由配置
 import '../pages/tabs/Tabs.dart';
 import '../pages/Search.dart';
+import '../pages/ProuctList.dart';
 
 
 
@@ -15,6 +16,7 @@ final routes = {
   // '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   // 搜索页
   '/search':(context) => SearchPage(),
+  '/prouctListPage':(context,{arguments}) => ProuctListPage(arguments:arguments),
 
 
 };
