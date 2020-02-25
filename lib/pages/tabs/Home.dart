@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // 定义变量接收 轮播数据
+  // 定义变量接收数据
   List _focusData = [];
   List _hotProductList = [];
   List _bestProductList = [];
@@ -41,11 +41,11 @@ class _HomePageState extends State<HomePage> {
     // print(reslut.data is Map);
     // 集合类型的类对象，通过模型类序列化 json
     var focusList = FocusModel.fromJson(reslut.data);
-    // 循环变量
-    focusList.result.forEach((value) {
-      // print(value.title);
-      // print(value.pic);
-    });
+    // // 循环变量
+    // focusList.result.forEach((value) {
+    //   print(value.title);
+    //   print(value.pic);
+    // });
     setState(() {
       this._focusData = focusList.result;
     });
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //热门商品
+  //猜你喜欢
   Widget _hotProductListWidget() {
     if (this._hotProductList.length > 0) {
       return Container(
