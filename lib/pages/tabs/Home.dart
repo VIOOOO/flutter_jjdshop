@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jjdshop/model/ProductModel.dart';
+import '../../model/ProductModel.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../../services/ScreenAdaper.dart';
 import '../../config/Config.dart';
-
+import 'package:dio/dio.dart';
 // 轮播图类模型
 import '../../model/FocusModel.dart';
 
-import 'package:dio/dio.dart';
+
 
 // 首页
 class HomePage extends StatefulWidget {
