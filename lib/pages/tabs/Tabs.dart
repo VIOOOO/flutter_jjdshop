@@ -14,7 +14,7 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   // tab 页面
   List _pageList = [
     HomePage(),
