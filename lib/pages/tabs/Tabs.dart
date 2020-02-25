@@ -14,9 +14,19 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
+
+  PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    //保持页面状态 AutomaticKeepAliveClientMixin 页面控制器初始化
+    this._pageController = new PageController(initialPage: this._currentIndex);
+  }
+
   // tab 页面
-  List _pageList = [
+  List<Widget> _pageList = [
     HomePage(),
     CategoryPage(),
     CartPage(),
@@ -29,7 +39,24 @@ class _TabsState extends State<Tabs> {
         title: Text('jdshop'),
       ),
       // 配置 tabs 对应路由页面
-      body: this._pageList[this._currentIndex],
+      // body: this._pageList[this._currentIndex],
+
+      // // 保持页面状态 IndexedStack ,切换页面不需要等待数据请求加载，在小项目使用很方便
+      // body: IndexedStack(
+      //   index: this._currentIndex,
+      //   // children 的类型为 Widget
+      //   children: _pageList,
+      // ),
+
+      // 保持页面状态 AutomaticKeepAliveClientMixin
+      //必须用 PageView 加载不同的页面
+      body: PageView(
+        controller: this._pageController,
+        children: this._pageList,
+        // // 监听页面改变
+        // onPageChanged: () {},
+      ),
+
       //  底部导航栏
       bottomNavigationBar: BottomNavigationBar(
         // 设置当前点击的 tabs
@@ -38,6 +65,8 @@ class _TabsState extends State<Tabs> {
         onTap: (index) {
           setState(() {
             this._currentIndex = index;
+            // 使用保持页面状态 AutomaticKeepAliveClientMixin 后点击 tab 导航跳转需要使用 jumpToPage
+            this._pageController.jumpToPage(index);
           });
         },
         // tab 超过3个时候需要添加该属性

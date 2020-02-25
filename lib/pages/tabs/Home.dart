@@ -7,8 +7,6 @@ import 'package:dio/dio.dart';
 // 轮播图类模型
 import '../../model/FocusModel.dart';
 
-
-
 // 首页
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -17,11 +15,17 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   // 定义变量接收数据
   List _focusData = [];
   List _hotProductList = [];
   List _bestProductList = [];
+
+// 继承 AutomaticKeepAliveClientMixin 内保持页面状态
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
