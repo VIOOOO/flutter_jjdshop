@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../model/ProductModel.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import '../../services/ScreenAdaper.dart';
+import '../../services/ScreenAdapter.dart';
 import '../../config/Config.dart';
 import 'package:dio/dio.dart';
 // 轮播图类模型
@@ -120,15 +120,15 @@ class _HomePageState extends State<HomePage>
   // 公共楼层标题组件
   Widget _titleWidget(value) {
     return Container(
-      height: ScreenAdaper.height(32),
-      margin: EdgeInsets.only(left: ScreenAdaper.width(20)),
-      padding: EdgeInsets.only(left: ScreenAdaper.width(20)),
+      height: ScreenAdapter.height(32),
+      margin: EdgeInsets.only(left: ScreenAdapter.width(20)),
+      padding: EdgeInsets.only(left: ScreenAdapter.width(20)),
       decoration: BoxDecoration(
         border: Border(
           // 左边竖线
           left: BorderSide(
             color: Colors.red,
-            width: ScreenAdaper.width(10),
+            width: ScreenAdapter.width(10),
           ),
         ),
       ),
@@ -147,9 +147,9 @@ class _HomePageState extends State<HomePage>
     if (this._hotProductList.length > 0) {
       return Container(
         // 外部高度设置要大于内部子元素高度之和
-        height: ScreenAdaper.height(234),
+        height: ScreenAdapter.height(234),
         // width: double.infinity,
-        padding: EdgeInsets.all(ScreenAdaper.width(10)),
+        padding: EdgeInsets.all(ScreenAdapter.width(10)),
         child: ListView.builder(
           // 水平列表
           scrollDirection: Axis.horizontal,
@@ -161,9 +161,9 @@ class _HomePageState extends State<HomePage>
             return Column(
               children: <Widget>[
                 Container(
-                  height: ScreenAdaper.height(140),
-                  width: ScreenAdaper.width(140),
-                  margin: EdgeInsets.only(right: ScreenAdaper.width(21)),
+                  height: ScreenAdapter.height(140),
+                  width: ScreenAdapter.width(140),
+                  margin: EdgeInsets.only(right: ScreenAdapter.width(21)),
                   child: Image.network(
                     // 'https://www.itying.com/images/flutter/hot${index + 1}.jpg',
                     sPic,
@@ -173,8 +173,8 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: ScreenAdaper.height(10)),
-                  height: ScreenAdaper.height(44),
+                  padding: EdgeInsets.only(top: ScreenAdapter.height(10)),
+                  height: ScreenAdapter.height(44),
                   child: Text(
                     "￥${this._hotProductList[index].price}",
                     style: TextStyle(color: Colors.red),
@@ -196,8 +196,8 @@ class _HomePageState extends State<HomePage>
   _recProductListWidget() {
     // 单个容器宽度 获取设备屏幕宽度 减去边宽度
     // 为了方便计算各元素宽度没有使用屏幕适配，使用屏幕适配会更好
-    // var itemWidth = (ScreenAdaper.width(ScreenAdaper.getScreenWidth()) - 30) / 2;
-    var itemWidth = (ScreenAdaper.getScreenWidth() - 30) / 2;
+    // var itemWidth = (ScreenAdapter.width(ScreenAdapter.getScreenWidth()) - 30) / 2;
+    var itemWidth = (ScreenAdapter.getScreenWidth() - 30) / 2;
 
     return Container(
       padding: EdgeInsets.all(10),
@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage>
           String sPic = value.sPic;
           sPic = Config.domain + sPic.replaceAll('\\', '/');
           return Container(
-            // padding: EdgeInsets.all(ScreenAdaper.width(5)),
+            // padding: EdgeInsets.all(ScreenAdapter.width(5)),
             padding: EdgeInsets.all(5),
             width: itemWidth,
             decoration: BoxDecoration(
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: ScreenAdaper.height(20)),
+                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
                   child: Text(
                     "${value.title}",
                     maxLines: 2,
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: ScreenAdaper.height(20)),
+                  padding: EdgeInsets.only(top: ScreenAdapter.height(20)),
                   // 定位组件
                   child: Stack(
                     children: <Widget>[
@@ -279,13 +279,13 @@ class _HomePageState extends State<HomePage>
     // 屏幕适配需要放在 build 方法内，才能获取到 context
     // 并传入设计稿的宽高
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
-    ScreenAdaper.init(context);
+    ScreenAdapter.init(context);
     return ListView(
       children: <Widget>[
         _swiperWidget(),
-        SizedBox(height: ScreenAdaper.height(20)),
+        SizedBox(height: ScreenAdapter.height(20)),
         _titleWidget("猜你喜欢"),
-        SizedBox(height: ScreenAdaper.height(20)),
+        SizedBox(height: ScreenAdapter.height(20)),
         _hotProductListWidget(),
         _titleWidget("热门推荐"),
         _recProductListWidget(),

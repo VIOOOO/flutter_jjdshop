@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/ScreenAdaper.dart';
+import '../services/ScreenAdapter.dart';
 import '../config/Config.dart';
 import 'package:dio/dio.dart';
 import '../model/ProductModel.dart';
@@ -132,7 +132,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
       return Container(
         padding: EdgeInsets.all(10),
         // 预留顶部位置给二级导航条，让页面滚动不会互相叠加
-        margin: EdgeInsets.only(top: ScreenAdaper.height(80)),
+        margin: EdgeInsets.only(top: ScreenAdapter.height(80)),
         child: ListView.builder(
           // 监听滚动条滚动事件
           controller: _scrollController,
@@ -146,8 +146,8 @@ class _ProuctListPageState extends State<ProuctListPage> {
                 Row(
                   children: <Widget>[
                     Container(
-                      width: ScreenAdaper.width(180),
-                      height: ScreenAdaper.height(180),
+                      width: ScreenAdapter.width(180),
+                      height: ScreenAdapter.height(180),
                       child: Image.network(
                         '${pic}',
                         fit: BoxFit.cover,
@@ -156,7 +156,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
                     Expanded(
                       flex: 1,
                       child: Container(
-                        height: ScreenAdaper.height(180),
+                        height: ScreenAdapter.height(180),
                         margin: EdgeInsets.only(left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -170,7 +170,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
                             Row(
                               children: <Widget>[
                                 Container(
-                                  height: ScreenAdaper.height(36),
+                                  height: ScreenAdapter.height(36),
                                   margin: EdgeInsets.only(right: 10),
                                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
 
@@ -183,7 +183,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
                                   child: Text("4g"),
                                 ),
                                 Container(
-                                  height: ScreenAdaper.height(36),
+                                  height: ScreenAdapter.height(36),
                                   margin: EdgeInsets.only(right: 10),
                                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   decoration: BoxDecoration(
@@ -217,7 +217,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
       // 加载中
       return Container(
         // 预留顶部位置给二级导航条，让页面滚动不会互相叠加
-        margin: EdgeInsets.only(top: ScreenAdaper.height(80)),
+        margin: EdgeInsets.only(top: ScreenAdapter.height(80)),
         width: double.infinity,
         child: !this.flag
             ? LoadingWidget()
@@ -275,11 +275,11 @@ class _ProuctListPageState extends State<ProuctListPage> {
   Widget _subHeaderWidget() {
     return Positioned(
       top: 0,
-      height: ScreenAdaper.height(80),
-      width: ScreenAdaper.width(750),
+      height: ScreenAdapter.height(80),
+      width: ScreenAdapter.width(750),
       child: Container(
-        width: ScreenAdaper.width(750),
-        height: ScreenAdaper.height(80),
+        width: ScreenAdapter.width(750),
+        height: ScreenAdapter.height(80),
         // color: Colors.red,
         decoration: BoxDecoration(
           border: Border(
@@ -296,7 +296,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
               child: InkWell(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                      0, ScreenAdaper.height(16), 0, ScreenAdaper.height(16)),
+                      0, ScreenAdapter.height(16), 0, ScreenAdapter.height(16)),
                   child: Row(
                     // 各元素水平居中
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -327,7 +327,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenAdaper.init(context);
+    ScreenAdapter.init(context);
     return Scaffold(
       // 给组件定义一个名字 ID
       key: _scaffoldKey,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/ScreenAdaper.dart';
+import '../../services/ScreenAdapter.dart';
 import '../../config/Config.dart';
 import 'package:dio/dio.dart';
 import '../../model/CateModel.dart';
@@ -81,8 +81,8 @@ class _CategoryPageState extends State<CategoryPage>
                       '${this._leftCateList[index].title}',
                       textAlign: TextAlign.center,
                     ),
-                    height: ScreenAdaper.height(84),
-                    padding: EdgeInsets.only(top: ScreenAdaper.height(24)),
+                    height: ScreenAdapter.height(84),
+                    padding: EdgeInsets.only(top: ScreenAdapter.height(24)),
                     color: this._selectIndex == index
                         ? Color.fromRGBO(240, 246, 246, 0.9)
                         : Colors.white,
@@ -149,7 +149,7 @@ class _CategoryPageState extends State<CategoryPage>
                       ),
                       // 文本 控制高度
                       Container(
-                        height: ScreenAdaper.height(28),
+                        height: ScreenAdapter.height(28),
                         child: Text("${this._rightCateList[index].title}"),
                       )
                     ],
@@ -176,21 +176,21 @@ class _CategoryPageState extends State<CategoryPage>
 
   @override
   Widget build(BuildContext context) {
-    // 屏幕适配 ScreenAdaper 需要在 build 里面初始化后才能使用
-    ScreenAdaper.init(context);
+    // 屏幕适配 ScreenAdapter 需要在 build 里面初始化后才能使用
+    ScreenAdapter.init(context);
 
     // 计算右侧 GridView 宽高比
     // 左侧栏宽度
-    var leftWidth = ScreenAdaper.getScreenWidth() / 4;
+    var leftWidth = ScreenAdapter.getScreenWidth() / 4;
 
     //右侧每一项宽度=（总宽度-左侧宽度-GridView外侧元素左右的Padding值-GridView中间的间距）/3
     var rightItemWidth =
-        (ScreenAdaper.getScreenWidth() - leftWidth - 20 - 20) / 3;
+        (ScreenAdapter.getScreenWidth() - leftWidth - 20 - 20) / 3;
     // 每一项宽度是按照比例显示在不同设备上
-    rightItemWidth = ScreenAdaper.width(rightItemWidth);
+    rightItemWidth = ScreenAdapter.width(rightItemWidth);
 
     // 右侧每一项高度
-    var rightItemHeight = rightItemWidth + ScreenAdaper.height(28);
+    var rightItemHeight = rightItemWidth + ScreenAdapter.height(28);
 
     return Row(
       children: <Widget>[

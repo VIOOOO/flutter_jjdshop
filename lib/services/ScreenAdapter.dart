@@ -1,7 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // 屏幕适配 需要在使用的页面，引入文件并在 build 内初始化
-class ScreenAdaper {
+class ScreenAdapter {
   static init(context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
   }
@@ -24,5 +24,10 @@ class ScreenAdaper {
   // 获取设备宽度
   static getScreenWidth() {
     return ScreenUtil.screenWidthDp;
+  }
+
+  // 字体大小
+  static size(double size) {
+    return ScreenUtil().setSp(size);
   }
 }
