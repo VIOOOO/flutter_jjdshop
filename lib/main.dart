@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       // home: Tabs(),
       // 初始化路由
-      initialRoute: '/prouctListPage',
+      initialRoute: '/',
       onGenerateRoute: onGenerateRoute,
     );
   }

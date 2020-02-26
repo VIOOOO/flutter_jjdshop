@@ -3,6 +3,8 @@ import '../../services/ScreenAdaper.dart';
 import '../../config/Config.dart';
 import 'package:dio/dio.dart';
 import '../../model/CateModel.dart';
+import '../../widget/LoadingWidget.dart';
+
 
 // 分类页面
 class CategoryPage extends StatefulWidget {
@@ -165,7 +167,8 @@ class _CategoryPageState extends State<CategoryPage>
           padding: EdgeInsets.all(10),
           height: double.infinity,
           color: Color.fromRGBO(240, 246, 246, 0.9),
-          child: Text("加载中..."),
+          // 加载中 loading
+          child: LoadingWidget(),
         ),
       );
     }
