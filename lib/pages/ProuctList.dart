@@ -45,6 +45,9 @@ class _ProuctListPageState extends State<ProuctListPage> {
   // 是否以后数据
   bool _hasMore = true;
 
+  // 是否有搜索的数据
+  bool _hasData = true;
+
   //二级导航数据
   List _subHeaderList = [
     //排序 sort    升序：price_1     {price:1}        降序：price_-1   {price:-1}
@@ -56,9 +59,21 @@ class _ProuctListPageState extends State<ProuctListPage> {
   //二级导航选中判断
   int _selectHeaderId = 1;
 
+  //配置search搜索框的值
+  var _initKeywordsController = new TextEditingController();
+  var _cid;
+  var _keywords;
+
   @override
   void initState() {
     super.initState;
+
+    this._cid = widget.arguments["cid"];
+    this._keywords = widget.arguments["keywords"];
+    //给search框框赋值
+    this._initKeywordsController.text = this._keywords;
+
+    // 先拿到路由传递参数后再请求接口
     this._getProductListData();
 
     //监听滚动条滚动事件
@@ -84,14 +99,32 @@ class _ProuctListPageState extends State<ProuctListPage> {
       this.flag = false;
     });
 
+    var api;
     // 子类内获取路由传递的arguments  可以通过 widget.arguments 直接访问
-    var api =
-        '${Config.domain}api/plist?cid=${widget.arguments["cid"]}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
+    // 如果 路由不是从搜索页面，传递 keywords 搜索内容，则是正常打开商品页面
+    if (this._keywords == null) {
+      api =
+          '${Config.domain}api/plist?cid=${this._cid}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
+    } else {
+      api =
+          '${Config.domain}api/plist?search=${this._keywords}&page=${this._page}&sort=${this._sort}&pageSize=${this._pageSize}';
+    }
+
     print(api);
     var reslut = await Dio().get(api);
     var productList = ProductModel.fromJson(reslut.data);
     print(productList.result.length);
 
+    // 判断是否有搜索数据 当在第一次进入页面并 无数据时候 才会显示
+    if (productList.result.length == 0 && this._page == 1) {
+      setState(() {
+        this._hasData = false;
+      });
+    } else {
+      this._hasData = true;
+    }
+
+    // 判断最后一页有没有数据
     if (productList.result.length < this._pageSize) {
       // 如果请求反回数据 ，每页数量小于指定一页的数量，则后面已经没有数据
       setState(() {
@@ -215,14 +248,16 @@ class _ProuctListPageState extends State<ProuctListPage> {
       );
     } else {
       // 加载中
-      return Container(
-        // 预留顶部位置给二级导航条，让页面滚动不会互相叠加
-        margin: EdgeInsets.only(top: ScreenAdapter.height(80)),
-        width: double.infinity,
-        child: !this.flag
-            ? LoadingWidget()
-            : Text("暂无数据", textAlign: TextAlign.center),
-      );
+      return LoadingWidget();
+
+      // return Container(
+      //   // 预留顶部位置给二级导航条，让页面滚动不会互相叠加
+      //   margin: EdgeInsets.only(top: ScreenAdapter.height(80)),
+      //   width: double.infinity,
+      //   child: !this.flag
+      //       ? LoadingWidget()
+      //       : Text("暂无数据", textAlign: TextAlign.center),
+      // );
     }
   }
 
@@ -331,13 +366,57 @@ class _ProuctListPageState extends State<ProuctListPage> {
     return Scaffold(
       // 给组件定义一个名字 ID
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('商品列表'),
-        // // 将导航条内 左边的默认添加的图标替换掉
-        // leading: Text(""),
+      // appBar: AppBar(
+      //   title: Text('商品列表'),
+      //   // // 将导航条内 左边的默认添加的图标替换掉
+      //   // leading: Text(""),
 
-        // 将导航条内 左边的默认添加的图标替换掉
-        actions: <Widget>[Text("")],
+      //   // 将导航条内 左边的默认添加的图标替换掉
+      //   actions: <Widget>[Text("")],
+      // ),
+      appBar: AppBar(
+        title: Container(
+          child: TextField(
+            controller: this._initKeywordsController,
+            // 进入页面默认选择输入框，键盘会弹起
+            autofocus: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                // 圆角
+                borderRadius: BorderRadius.circular(30),
+                // 去掉四周自带的边框
+                borderSide: BorderSide.none,
+              ),
+            ),
+            // 监听接收输入框的内容
+            onChanged: (value) {
+              setState(() {
+                this._keywords = value;
+              });
+            },
+          ),
+          height: ScreenAdapter.height(68),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(233, 233, 233, 0.8),
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        actions: <Widget>[
+          InkWell(
+            child: Container(
+              height: ScreenAdapter.height(68),
+              width: ScreenAdapter.width(80),
+              child: Row(
+                children: <Widget>[
+                  Text("搜索"),
+                ],
+              ),
+            ),
+            onTap: () {
+              this._subHeaderChange(1);
+            },
+          )
+        ],
       ),
       // 右侧抽屉组件
       endDrawer: Drawer(
@@ -346,15 +425,19 @@ class _ProuctListPageState extends State<ProuctListPage> {
         ),
       ),
       // body: Text("${widget.arguments}"),
-      body: Stack(
-        // 定位组件
-        children: <Widget>[
-          // 页面内容
-          _productListWidget(),
-          // 顶部二级导航条 固定位置
-          _subHeaderWidget()
-        ],
-      ),
+      body: this._hasData
+          ? Stack(
+              // 定位组件
+              children: <Widget>[
+                // 页面内容
+                _productListWidget(),
+                // 顶部二级导航条 固定位置
+                _subHeaderWidget()
+              ],
+            )
+          : Center(
+              child: Text("没有您要浏览的数据"),
+            ),
     );
   }
 }
