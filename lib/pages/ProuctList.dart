@@ -42,7 +42,7 @@ class _ProuctListPageState extends State<ProuctListPage> {
   // 接口请求开关 解决滑动触发重复请求
   bool flag = true;
 
-  // 是否以后数据
+  // 是否还有数据
   bool _hasMore = true;
 
   // 是否有搜索的数据
