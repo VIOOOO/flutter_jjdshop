@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jjdshop/routes/Routes.dart';
+import 'routes/Routes.dart';
 // import 'pages/tabs/Tabs.dart';
 
 void main() => runApp(MyApp());
@@ -16,9 +16,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       // home: Tabs(),
+      // 隐藏右上角 debug 标志
+      debugShowCheckedModeBanner: false,
       // 初始化路由
-      initialRoute: '/',
+      initialRoute: '/search',
       onGenerateRoute: onGenerateRoute,
+
+      // 主题颜色
+      theme: ThemeData(
+        primaryColor: Colors.white,
+      ),
     );
   }
 }

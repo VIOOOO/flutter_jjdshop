@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/ScreenAdapter.dart';
 
 import 'Home.dart';
 import 'Cart.dart';
@@ -34,10 +35,51 @@ class _TabsState extends State<Tabs> {
   ];
   @override
   Widget build(BuildContext context) {
+    // 初始化屏幕适配
+    ScreenAdapter.init(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('jdshop'),
-      ),
+      // 若不抽离单独配置导航，可以判断页面显示不同导航，抽离会更好
+      appBar: _currentIndex != 3
+          ? AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.center_focus_weak,
+                    size: 28, color: Colors.black),
+                onPressed: () {},
+              ),
+              title: InkWell(
+                child: Container(
+                  height: ScreenAdapter.height(70),
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(233, 233, 233, 0.8),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: EdgeInsets.only(left: 10),
+                  child: Row(
+                    // 垂直居中
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.search),
+                      Text(
+                        "搜索",
+                        style: TextStyle(fontSize: ScreenAdapter.size(28)),
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, '/search');
+                },
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.message, size: 28, color: Colors.black87),
+                  onPressed: null,
+                ),
+              ],
+            )
+          : AppBar(
+              title: Text("用户中心"),
+            ),
       // 配置 tabs 对应路由页面
       // body: this._pageList[this._currentIndex],
 
@@ -53,8 +95,14 @@ class _TabsState extends State<Tabs> {
       body: PageView(
         controller: this._pageController,
         children: this._pageList,
-        // // 监听页面改变
-        // onPageChanged: () {},
+        // 监听页面改变
+        onPageChanged: (index) {
+          setState(() {
+            this._currentIndex = index;
+          });
+        },
+        // // 禁止 PageView 滑动
+        // physics: NeverScrollableScrollPhysics(),
       ),
 
       //  底部导航栏
