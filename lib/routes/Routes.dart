@@ -16,7 +16,7 @@ final routes = {
   // '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   // 搜索页
   '/search':(context) => SearchPage(),
-  '/prouctListPage':(context,{arguments}) => ProuctListPage(arguments:arguments),
+  '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
 
 
 };

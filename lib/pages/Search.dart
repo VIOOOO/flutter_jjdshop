@@ -52,7 +52,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/prouctListPage', arguments: {
+              Navigator.pushNamed(context, '/prodyuctListPage', arguments: {
                 "keywords":this._keywords
               });
             },

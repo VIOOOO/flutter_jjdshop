@@ -6,21 +6,21 @@ import '../model/ProductModel.dart';
 import '../widget/LoadingWidget.dart';
 
 // 商品列表
-class ProuctListPage extends StatefulWidget {
+class ProductListPage extends StatefulWidget {
   Map arguments;
 
-  ProuctListPage({Key key, this.arguments}) : super(key: key);
+  ProductListPage({Key key, this.arguments}) : super(key: key);
 
   @override
-  _ProuctListPageState createState() => _ProuctListPageState();
-  // 在下面的 _ProuctListPageState 子类内获取 arguments 属性可以通过 widget.arguments 获取到
+  _ProductListPageState createState() => _ProductListPageState();
+  // 在下面的 _ProductListPageState 子类内获取 arguments 属性可以通过 widget.arguments 获取到
   // 子类内可以不再需要另外传入属性，并写构造函数接收
-  // _ProuctListPageState createState() => _ProuctListPageState(arguments);
-  // 因为_ProuctListPageState 子类 继承 State，又将ProuctListPage 泛型方式传入 ，所以子类内可以直接访问到 widget.arguments
+  // _ProductListPageState createState() => _ProductListPageState(arguments);
+  // 因为_ProductListPageState 子类 继承 State，又将ProductListPage 泛型方式传入 ，所以子类内可以直接访问到 widget.arguments
 
 }
 
-class _ProuctListPageState extends State<ProuctListPage> {
+class _ProductListPageState extends State<ProductListPage> {
   // 全局声明 GlobalKey 给组件命名，用于打开右侧抽屉组件
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
