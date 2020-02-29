@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/ScreenAdapter.dart';
 
+// 类名称和组件名称保持首字母大写，文件夹可以大写也可以小写，如果声明的文件不是类，而是方法，文件首字母小写
 import 'ProductContent/ProductContentFirst.dart';
 import 'ProductContent/ProductContentSecond.dart';
 import 'ProductContent/ProductContentThird.dart';
+
+import '../widget/JdButton.dart';
 
 // 产品详情呀
 
@@ -104,11 +107,53 @@ class _ProductContentPageState extends State<ProductContentPage> {
               // 底部固定浮动导航
               Positioned(
                 width: ScreenAdapter.width(750),
-                height: ScreenAdapter.width(80),
-                bottom:0,
+                height: ScreenAdapter.width(88),
+                bottom: 0,
                 child: Container(
-                  color: Colors.red,
-                  child: Text("底部"),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.black26,
+                        width: 1,
+                      ),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    // 底部固定菜单， 左边固定宽，右边两个自适应按钮
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(top: ScreenAdapter.height(10)),
+                        width: 100,
+                        height: ScreenAdapter.width(88),
+                        child: Column(
+                          children: <Widget>[
+                            Icon(Icons.shopping_cart),
+                            Text("购物车"),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: JdButton(
+                          color: Color.fromRGBO(253, 1, 0, 0.9),
+                          text: "加入购物车",
+                          cb: (){
+                            print("加入购物车");
+                          },
+                        ),
+                      ),Expanded(
+                        flex: 1,
+                        child: JdButton(
+                          color: Color.fromRGBO(225, 165, 0, 0.9),
+                          text: "立即购买",
+                          cb: (){
+                            print("立即购买");
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
