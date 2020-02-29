@@ -1,17 +1,85 @@
 import 'package:flutter/material.dart';
 import '../../services/ScreenAdapter.dart';
 import '../../widget/JdButton.dart';
+import '../../model/ProductContentModel.dart';
+import '../../config/Config.dart';
 
 // 商品详情-商品页面
 
 class ProductContentFrist extends StatefulWidget {
-  ProductContentFrist({Key key}) : super(key: key);
+  // 接收主页面传过来的商品数据
+  final List _productContentList;
+  // 商品数据为必选参数
+  ProductContentFrist(this._productContentList, {Key key}) : super(key: key);
 
   @override
   _ProductContentFristState createState() => _ProductContentFristState();
 }
 
 class _ProductContentFristState extends State<ProductContentFrist> {
+  ProductContentItem _productContent;
+
+  // 二级菜单的数据
+  List _attr = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // 把上一层的对象数据，赋值给当前组件
+    this._productContent = widget._productContentList[0];
+    this._attr = this._productContent.attr;
+    // print(this._attr);
+    // [{"cate":"鞋面材料","list":["牛皮 "]},{"cate":"闭合方式","list":["系带"]},{"cate":"颜色","list":["红色","白色","黄色"]}]
+  }
+
+  // 封装选项卡菜单内的二级菜单
+  List<Widget> _getAttrItemWidget(attrItem) {
+    List<Widget> attrItemList = [];
+
+    attrItem.list.forEach((item) {
+      attrItemList.add(Container(
+        margin: EdgeInsets.all(10),
+        child: Chip(
+          label: Text("${item}"),
+          padding: EdgeInsets.all(10),
+        ),
+      ));
+    });
+
+    return attrItemList;
+  }
+
+  // 封装选项卡菜单内的选项 渲染 attr
+  List<Widget> _getAttrWidget() {
+    List<Widget> attrList = [];
+
+    // 循环将 数据取出放入 attrList
+    this._attr.forEach((attrItem) {
+      attrList.add(Wrap(
+        children: <Widget>[
+          Container(
+            width: ScreenAdapter.width(120),
+            child: Padding(
+              padding: EdgeInsets.only(top: ScreenAdapter.height(22)),
+              child: Text(
+                "${attrItem.cate}",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Container(
+            width: ScreenAdapter.width(590),
+            child: Wrap(
+              children: this._getAttrItemWidget(attrItem),
+            ),
+          )
+        ],
+      ));
+    });
+
+    return attrList;
+  }
+
   // 底部弹出菜单
   _attrBottomSheet() {
     showModalBottomSheet(
@@ -31,166 +99,7 @@ class _ProductContentFristState extends State<ProductContentFrist> {
                   child: ListView(
                     children: <Widget>[
                       Column(
-                        children: <Widget>[
-                          // 颜色
-                          Wrap(
-                            children: <Widget>[
-                              Container(
-                                width: ScreenAdapter.width(100),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: ScreenAdapter.height(30)),
-                                  child: Text(
-                                    "颜色",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: ScreenAdapter.width(610),
-                                child: Wrap(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-
-                          // 风格
-                          Wrap(
-                            children: <Widget>[
-                              Container(
-                                width: ScreenAdapter.width(100),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: ScreenAdapter.height(30)),
-                                  child: Text(
-                                    "风格",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: ScreenAdapter.width(610),
-                                child: Wrap(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-
-                          // 尺寸
-                          Wrap(
-                            children: <Widget>[
-                              Container(
-                                width: ScreenAdapter.width(100),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: ScreenAdapter.height(30)),
-                                  child: Text(
-                                    "尺寸",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: ScreenAdapter.width(610),
-                                child: Wrap(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Chip(
-                                        label: Text("白色"),
-                                        padding: EdgeInsets.all(10),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
+                        children: _getAttrWidget(),
                       )
                     ],
                   ),
@@ -238,20 +147,25 @@ class _ProductContentFristState extends State<ProductContentFrist> {
 
   @override
   Widget build(BuildContext context) {
+    // 图片处理
+    String pic = Config.domain + this._productContent.pic;
+    pic = pic.replaceAll('\\', '/');
     return Container(
       padding: EdgeInsets.all(10),
       child: ListView(
         children: <Widget>[
           // 配置图片宽高比
           AspectRatio(
-            aspectRatio: 16 / 9,
-            child:
-                Image.network("https://www.itying.com/images/flutter/p1.jpg"),
+            aspectRatio: 16 / 12,
+            child: Image.network(
+              "${pic}",
+              fit: BoxFit.cover,
+            ),
           ),
           Container(
             padding: EdgeInsets.only(top: 10),
             child: Text(
-              "联想ThinkPad 翼480（0VCD） 英特尔酷睿i5 14英寸轻薄窄边框笔记本电脑",
+              "${this._productContent.title}",
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: ScreenAdapter.size(36),
@@ -261,7 +175,7 @@ class _ProductContentFristState extends State<ProductContentFrist> {
           Container(
             padding: EdgeInsets.only(top: 10),
             child: Text(
-              "震撼首发，15.9毫米全金属外观，4.9毫米轻薄窄边框，指纹电源按钮，杜比音效，2G独显，预装正版office软件",
+              "${this._productContent.subTitle}",
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: ScreenAdapter.size(28),
@@ -279,7 +193,7 @@ class _ProductContentFristState extends State<ProductContentFrist> {
                     children: <Widget>[
                       Text("特价: "),
                       Text(
-                        "¥28",
+                        "¥${this._productContent.price}",
                         style: TextStyle(
                           color: Colors.red,
                           fontSize: ScreenAdapter.size(46),
@@ -296,7 +210,7 @@ class _ProductContentFristState extends State<ProductContentFrist> {
                     children: <Widget>[
                       Text("原价: "),
                       Text(
-                        "¥50",
+                        "¥${this._productContent.oldPrice}",
                         style: TextStyle(
                             color: Colors.black38,
                             fontSize: ScreenAdapter.size(28),
