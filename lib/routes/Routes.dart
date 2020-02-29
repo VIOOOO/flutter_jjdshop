@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../pages/tabs/Tabs.dart';
 import '../pages/Search.dart';
 import '../pages/ProuctList.dart';
+import '../pages/ProductContent.dart';
 
 
 
@@ -17,6 +18,7 @@ final routes = {
   // 搜索页
   '/search':(context) => SearchPage(),
   '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
+  '/productContent':(context,{arguments}) => ProductContentPage(arguments:arguments),
 
 
 };
