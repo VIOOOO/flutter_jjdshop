@@ -138,16 +138,17 @@ class _ProductContentPageState extends State<ProductContentPage> {
                         child: JdButton(
                           color: Color.fromRGBO(253, 1, 0, 0.9),
                           text: "加入购物车",
-                          cb: (){
+                          cb: () {
                             print("加入购物车");
                           },
                         ),
-                      ),Expanded(
+                      ),
+                      Expanded(
                         flex: 1,
                         child: JdButton(
                           color: Color.fromRGBO(225, 165, 0, 0.9),
                           text: "立即购买",
-                          cb: (){
+                          cb: () {
                             print("立即购买");
                           },
                         ),
