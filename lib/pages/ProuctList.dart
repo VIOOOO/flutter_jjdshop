@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/SearchServices.dart';
 import '../services/ScreenAdapter.dart';
 import '../config/Config.dart';
 import 'package:dio/dio.dart';
@@ -113,7 +114,7 @@ class _ProductListPageState extends State<ProductListPage> {
     print(api);
     var reslut = await Dio().get(api);
     var productList = ProductModel.fromJson(reslut.data);
-    print(productList.result.length);
+    print(productList.result);
 
     // 判断是否有搜索数据 当在第一次进入页面并 无数据时候 才会显示
     if (productList.result.length == 0 && this._page == 1) {
@@ -272,6 +273,7 @@ class _ProductListPageState extends State<ProductListPage> {
     } else {
       setState(() {
         this._selectHeaderId = id;
+
         // 排序
         this._sort =
             "${this._subHeaderList[id - 1]["fileds"]}_${this._subHeaderList[id - 1]["sort"]}";
@@ -280,14 +282,15 @@ class _ProductListPageState extends State<ProductListPage> {
         this._page = 1;
         // 重置数据
         this._productList = [];
-
-        // 回到顶部
-        _scrollController.jumpTo(0);
-        // 重置 _hasMore
-        this._hasMore = true;
-        // 升序 降序切换
+        //改变sort排序 升序 降序切换
         this._subHeaderList[id - 1]['sort'] =
             this._subHeaderList[id - 1]['sort'] * -1;
+        // 如果之前有数据 则需要回到顶部
+        if(this._hasData){
+          _scrollController.jumpTo(0);
+        }
+        // 重置 _hasMore
+        this._hasMore = true;
 
         // 重新请求
         this._getProductListData();
@@ -413,6 +416,8 @@ class _ProductListPageState extends State<ProductListPage> {
               ),
             ),
             onTap: () {
+              // 点搜索时候保存关键词
+              SearchServices.setHistoryData(this._keywords);
               this._subHeaderChange(1);
             },
           )
