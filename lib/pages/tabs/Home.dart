@@ -212,11 +212,8 @@ class _HomePageState extends State<HomePage>
           sPic = Config.domain + sPic.replaceAll('\\', '/');
           return InkWell(
             onTap: () {
-
-              Navigator.pushNamed(context, '/productContent',arguments: {
-                "id":value.sId
-              });
-
+              Navigator.pushNamed(context, '/productContent',
+                  arguments: {"id": value.sId});
             },
             child: Container(
               // padding: EdgeInsets.all(ScreenAdapter.width(5)),
@@ -289,16 +286,55 @@ class _HomePageState extends State<HomePage>
     // 并传入设计稿的宽高
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     ScreenAdapter.init(context);
-    return ListView(
-      children: <Widget>[
-        _swiperWidget(),
-        SizedBox(height: ScreenAdapter.height(20)),
-        _titleWidget("猜你喜欢"),
-        SizedBox(height: ScreenAdapter.height(20)),
-        _hotProductListWidget(),
-        _titleWidget("热门推荐"),
-        _recProductListWidget(),
-      ],
+    return Scaffold(
+      // 将导航抽离到每个页面内
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.center_focus_weak, size: 28, color: Colors.black),
+          onPressed: () {},
+        ),
+        title: InkWell(
+          child: Container(
+            height: ScreenAdapter.height(70),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(233, 233, 233, 0.8),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: EdgeInsets.only(left: 10),
+            child: Row(
+              // 垂直居中
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.search),
+                Text(
+                  "搜索",
+                  style: TextStyle(fontSize: ScreenAdapter.size(28)),
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, '/search');
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.message, size: 28, color: Colors.black87),
+            onPressed: null,
+          ),
+        ],
+      ),
+      body: ListView(
+        children: <Widget>[
+          _swiperWidget(),
+          SizedBox(height: ScreenAdapter.height(20)),
+          _titleWidget("猜你喜欢"),
+          SizedBox(height: ScreenAdapter.height(20)),
+          _hotProductListWidget(),
+          _titleWidget("热门推荐"),
+          _recProductListWidget(),
+        ],
+      ),
     );
   }
 }

@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
       // 当调用方法内的 notifyListeners 更新状态时候，通知其他组件，改变状态
        providers: [
          // 调用 ChangeNotifierProvider 方法 创建的类里面写 自己创建的状态类要一致
-        ChangeNotifierProvider(create: (_) => Counter()),
+        // ChangeNotifierProvider(create: (_) => Counter()),
         ChangeNotifierProvider(create: (_) => Cart()),
       ],
       child: MaterialApp(

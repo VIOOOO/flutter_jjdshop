@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import '../../model/CateModel.dart';
 import '../../widget/LoadingWidget.dart';
 
-
 // 分类页面
 class CategoryPage extends StatefulWidget {
   CategoryPage({Key key}) : super(key: key);
@@ -133,28 +132,27 @@ class _CategoryPageState extends State<CategoryPage>
 
                 // 返回每一个元素
                 return InkWell(
-                  onTap: (){
+                  onTap: () {
                     // 点击元素跳转 传递ID
-                    Navigator.pushNamed(context, '/prouctListPage',arguments: {
-                      "cid":this._rightCateList[index].sId
-                    });
+                    Navigator.pushNamed(context, '/prouctListPage',
+                        arguments: {"cid": this._rightCateList[index].sId});
                   },
                   child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      // 配置图片宽高比
-                      AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Image.network("${pic}", fit: BoxFit.cover),
-                      ),
-                      // 文本 控制高度
-                      Container(
-                        height: ScreenAdapter.height(28),
-                        child: Text("${this._rightCateList[index].title}"),
-                      )
-                    ],
+                    child: Column(
+                      children: <Widget>[
+                        // 配置图片宽高比
+                        AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Image.network("${pic}", fit: BoxFit.cover),
+                        ),
+                        // 文本 控制高度
+                        Container(
+                          height: ScreenAdapter.height(28),
+                          child: Text("${this._rightCateList[index].title}"),
+                        )
+                      ],
+                    ),
                   ),
-                ),
                 );
               }),
         ),
@@ -192,12 +190,51 @@ class _CategoryPageState extends State<CategoryPage>
     // 右侧每一项高度
     var rightItemHeight = rightItemWidth + ScreenAdapter.height(28);
 
-    return Row(
-      children: <Widget>[
-        // 分两边，左侧固定宽度 右侧自适应
-        _leftCateWidget(leftWidth),
-        _rightCateWidget(rightItemWidth, rightItemHeight)
-      ],
+    return Scaffold(
+      // 将导航抽离到每个页面内
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.center_focus_weak, size: 28, color: Colors.black),
+          onPressed: () {},
+        ),
+        title: InkWell(
+          child: Container(
+            height: ScreenAdapter.height(70),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(233, 233, 233, 0.8),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: EdgeInsets.only(left: 10),
+            child: Row(
+              // 垂直居中
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.search),
+                Text(
+                  "搜索",
+                  style: TextStyle(fontSize: ScreenAdapter.size(28)),
+                ),
+              ],
+            ),
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, '/search');
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.message, size: 28, color: Colors.black87),
+            onPressed: null,
+          ),
+        ],
+      ),
+      body: Row(
+        children: <Widget>[
+          // 分两边，左侧固定宽度 右侧自适应
+          _leftCateWidget(leftWidth),
+          _rightCateWidget(rightItemWidth, rightItemHeight)
+        ],
+      ),
     );
   }
 }
