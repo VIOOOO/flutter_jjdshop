@@ -4,6 +4,9 @@ import '../../widget/JdButton.dart';
 import '../../model/ProductContentModel.dart';
 import '../../config/Config.dart';
 
+// 广播
+import '../../services/EventBus.dart';
+
 // 商品详情-商品页面
 
 class ProductContentFrist extends StatefulWidget {
@@ -30,6 +33,8 @@ class _ProductContentFristState extends State<ProductContentFrist>
   @override
   bool get wantKeepAlive => true;
 
+  var actionEventBus;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,24 @@ class _ProductContentFristState extends State<ProductContentFrist>
     // print(this._attr);
     // [{"cate":"鞋面材料","list":["牛皮 "]},{"cate":"闭合方式","list":["系带"]},{"cate":"颜色","list":["红色","白色","黄色"]}]
     _initAtter();
+
+    // 监听广播 监听 ProductContentEvent 类的广播，若不写类 则是监听所有广播
+    // eventBus.on().listen((event) {
+    //   print(event);
+    // });
+
+    // 若事件监听广播 在离开页面时候不销毁，则每次进入页面会再创建监听事件
+    this.actionEventBus = eventBus.on<ProductContentEvent>().listen((str) {
+      print(str);
+      // 监听到事件后弹出底部弹出框
+      this._attrBottomSheet();
+    });
+  }
+
+  //销毁 事件监听，不销毁监听 再次进入页面会发生错误，因为有的页面无值
+  void dispose() {
+    super.dispose();
+    this.actionEventBus.cancel(); //取消事件监听
   }
 
   // 需要将数据内 list 转为如下的 Map 类型

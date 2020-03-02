@@ -13,6 +13,9 @@ import 'package:dio/dio.dart';
 import '../model/ProductContentModel.dart';
 import '../widget/LoadingWidget.dart';
 
+// 事件广播
+import '../services/EventBus.dart';
+
 // 产品详情呀
 
 class ProductContentPage extends StatefulWidget {
@@ -129,7 +132,7 @@ class _ProductContentPageState extends State<ProductContentPage> {
                     children: <Widget>[
                       ProductContentFrist(this._productContentList),
                       ProductContentSecond(this._productContentList),
-                      ProductContentThird(this._productContentList),
+                      ProductContentThird(),
                     ],
                   ),
                   // 底部固定浮动导航
@@ -168,7 +171,15 @@ class _ProductContentPageState extends State<ProductContentPage> {
                               color: Color.fromRGBO(253, 1, 0, 0.9),
                               text: "加入购物车",
                               cb: () {
-                                print("加入购物车");
+
+                                if (this._productContentList[0].attr.lenght >0) {
+                                  // 事件广播 让子页面里监听到后触发对应事件
+                                  // 弹出筛选菜单
+                                  eventBus
+                                      .fire(new ProductContentEvent("加入购物车"));
+                                } else {
+                                  print("加入购物车操作");
+                                }
                               },
                             ),
                           ),
@@ -178,7 +189,15 @@ class _ProductContentPageState extends State<ProductContentPage> {
                               color: Color.fromRGBO(225, 165, 0, 0.9),
                               text: "立即购买",
                               cb: () {
-                                print("立即购买");
+                                print(this._productContentList[0].attr.lenght);
+                                // if (this._productContentList[0].attr.lenght>0) {
+                                //   // 事件广播 让子页面里监听到后触发对应事件
+                                //   // 弹出筛选菜单
+                                //   eventBus
+                                //       .fire(new ProductContentEvent("立即购买"));
+                                // } else {
+                                //   print("立即购买操作");
+                                // }
                               },
                             ),
                           ),
