@@ -16,11 +16,19 @@ class ProductContentFrist extends StatefulWidget {
   _ProductContentFristState createState() => _ProductContentFristState();
 }
 
-class _ProductContentFristState extends State<ProductContentFrist> {
+class _ProductContentFristState extends State<ProductContentFrist>
+    with AutomaticKeepAliveClientMixin {
   ProductContentItem _productContent;
 
   // 二级菜单的数据
   List _attr = [];
+
+  // 选中的商品项目
+  String _selectedValue;
+
+  // 继承 AutomaticKeepAliveClientMixin 内保持页面状态
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -30,18 +38,122 @@ class _ProductContentFristState extends State<ProductContentFrist> {
     this._attr = this._productContent.attr;
     // print(this._attr);
     // [{"cate":"鞋面材料","list":["牛皮 "]},{"cate":"闭合方式","list":["系带"]},{"cate":"颜色","list":["红色","白色","黄色"]}]
+    _initAtter();
+  }
+
+  // 需要将数据内 list 转为如下的 Map 类型
+  /*   
+   [
+     
+      {
+       "cate":"尺寸",
+       list":[{
+
+            "title":"xl",
+            "checked":false
+          },
+          {
+
+            "title":"xxxl",
+            "checked":true
+          },
+        ]
+      },
+      {
+       "cate":"颜色",
+       list":[{
+
+            "title":"黑色",
+            "checked":false
+          },
+          {
+
+            "title":"白色",
+            "checked":true
+          },
+        ]
+      }
+  ]    
+   */
+  // 初始化 Attr 格式化数据 转换为 Map 类型
+  _initAtter() {
+    var attr = this._attr;
+    // 循环取到商品的类型和选项
+    for (var i = 0; i < attr.length; i++) {
+      // 在对应的类型内 循环选项，修改用户的选中项目
+      for (var j = 0; j < attr[i].list.length; j++) {
+        // 将在数据模型里创建的 attrList 空数组 接收修改为 Map 类型的 list 数组，用于后面的记住用户选中
+        if (j == 0) {
+          // 默认每个类型第一项选中
+          attr[i].attrList.add({"title": attr[i].list[j], "checked": true});
+        } else {
+          attr[i].attrList.add({"title": attr[i].list[j], "checked": false});
+        }
+      }
+    }
+    // 获取选中的值
+    _getSelectedAttrValue();
+  }
+
+  // 改变属性值
+  _changeAttr(cate, title, setBottomState) {
+    var attr = this._attr;
+
+    for (var i = 0; i < attr.length; i++) {
+      if (attr[i].cate == cate) {
+        // 选中类型内的项重置，再修改选中的项状态
+        for (var j = 0; j < attr[i].attrList.length; j++) {
+          attr[i].attrList[j]["checked"] = false;
+          if (title == attr[i].attrList[j]["title"]) {
+            attr[i].attrList[j]["checked"] = true;
+          }
+        }
+      }
+    }
+
+    // 重新渲染, 但是弹出的菜单组件内数据与当前页的数据是分开的，没有同步刷新，所以需要用到 StatefulBuilder 需要传入的 setBottomState 刷新数据状态
+    setBottomState(() {
+      this._attr = attr;
+    });
+    // 获取选中的值
+    _getSelectedAttrValue();
+  }
+
+  // 获取选中的值
+  _getSelectedAttrValue() {
+    var _list = this._attr;
+    List tempArr = [];
+
+    for (var i = 0; i < _list.length; i++) {
+      for (var j = 0; j < _list[i].attrList.length; j++) {
+        if (_list[i].attrList[j]['checked'] == true) {
+          tempArr.add(_list[i].attrList[j]["title"]);
+        }
+      }
+    }
+    // print(tempArr.join(','));
+    setState(() {
+      this._selectedValue = tempArr.join(',');
+    });
   }
 
   // 封装选项卡菜单内的二级菜单
-  List<Widget> _getAttrItemWidget(attrItem) {
+  List<Widget> _getAttrItemWidget(attrItem, setBottomState) {
     List<Widget> attrItemList = [];
 
-    attrItem.list.forEach((item) {
+    attrItem.attrList.forEach((item) {
       attrItemList.add(Container(
         margin: EdgeInsets.all(10),
-        child: Chip(
-          label: Text("${item}"),
-          padding: EdgeInsets.all(10),
+        child: InkWell(
+          onTap: () {
+            // 传入选中的，类型和数据状态
+            _changeAttr(attrItem.cate, item["title"], setBottomState);
+          },
+          child: Chip(
+            label: Text("${item["title"]}"),
+            padding: EdgeInsets.all(10),
+            backgroundColor: item["checked"] ? Colors.red : Colors.black26,
+          ),
         ),
       ));
     });
@@ -49,8 +161,8 @@ class _ProductContentFristState extends State<ProductContentFrist> {
     return attrItemList;
   }
 
-  // 封装选项卡菜单内的选项 渲染 attr
-  List<Widget> _getAttrWidget() {
+  // 封装选项卡菜单内的选项 渲染 attr 传入弹出组件的数据状态
+  List<Widget> _getAttrWidget(setBottomState) {
     List<Widget> attrList = [];
 
     // 循环将 数据取出放入 attrList
@@ -70,7 +182,8 @@ class _ProductContentFristState extends State<ProductContentFrist> {
           Container(
             width: ScreenAdapter.width(590),
             child: Wrap(
-              children: this._getAttrItemWidget(attrItem),
+              // 传入弹出组件状态
+              children: this._getAttrItemWidget(attrItem, setBottomState),
             ),
           )
         ],
@@ -86,61 +199,67 @@ class _ProductContentFristState extends State<ProductContentFrist> {
       // 上下文的对象
       context: context,
       builder: (context) {
-        // GestureDetector 手势事件，点击不会有水波纹
-        return GestureDetector(
-            onTap: () {
-              // 解决 showModalBottomSheet 点击弹出窗内部时候 会关闭弹出窗
-              return false;
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(ScreenAdapter.width(20)),
-                  child: ListView(
-                    children: <Widget>[
-                      Column(
-                        children: _getAttrWidget(),
-                      )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  width: ScreenAdapter.width(750),
-                  height: ScreenAdapter.height(76),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: JdButton(
-                            color: Color.fromRGBO(253, 1, 0, 0.9),
-                            text: "加入购物车",
-                            cb: () {
-                              print("加入购物车");
-                            },
-                          ),
-                        ),
+        // 因为弹窗组件和当前页数据是分开的，所以需要 StatefulBuilder  setBottomState 改变组件内的状态
+        return StatefulBuilder(
+          builder: (BuildContext context, setBottomState) {
+            // GestureDetector 手势事件，点击不会有水波纹
+            return GestureDetector(
+                onTap: () {
+                  // 解决 showModalBottomSheet 点击弹出窗内部时候 会关闭弹出窗
+                  return false;
+                },
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(ScreenAdapter.width(20)),
+                      child: ListView(
+                        children: <Widget>[
+                          Column(
+                            // 调用弹出组件，并传入数据状态
+                            children: _getAttrWidget(setBottomState),
+                          )
+                        ],
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: JdButton(
-                            color: Color.fromRGBO(225, 165, 0, 0.9),
-                            text: "立即购买",
-                            cb: () {
-                              print("立即购买");
-                            },
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      width: ScreenAdapter.width(750),
+                      height: ScreenAdapter.height(76),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: JdButton(
+                                color: Color.fromRGBO(253, 1, 0, 0.9),
+                                text: "加入购物车",
+                                cb: () {
+                                  print("加入购物车");
+                                },
+                              ),
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: JdButton(
+                                color: Color.fromRGBO(225, 165, 0, 0.9),
+                                text: "立即购买",
+                                cb: () {
+                                  print("立即购买");
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ));
+                    )
+                  ],
+                ));
+          },
+        );
       },
     );
   }
@@ -222,22 +341,26 @@ class _ProductContentFristState extends State<ProductContentFrist> {
               ],
             ),
           ),
-          //筛选
-          Container(
-              margin: EdgeInsets.only(top: 10),
-              height: ScreenAdapter.height(80),
-              child: InkWell(
-                onTap: () {
-                  // 底部弹出菜单
-                  _attrBottomSheet();
-                },
-                child: Row(
-                  children: <Widget>[
-                    Text("已选: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text("115，黑色，XL，1件")
-                  ],
-                ),
-              )),
+          //筛选 若没有商品选项，则显示空字符串
+          this._attr.length > 0
+              ? Container(
+                  margin: EdgeInsets.only(top: 10),
+                  height: ScreenAdapter.height(80),
+                  child: InkWell(
+                    onTap: () {
+                      // 底部弹出菜单
+                      _attrBottomSheet();
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Text("已选: ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text("${this._selectedValue}")
+                      ],
+                    ),
+                  ),
+                )
+              : Text(""),
           Divider(),
           Container(
             height: ScreenAdapter.height(80),

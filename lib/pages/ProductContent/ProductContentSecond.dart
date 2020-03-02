@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../model/ProductContentModel.dart';
+import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
 
 // 商品详情-商品详情
 
@@ -12,20 +12,34 @@ class ProductContentSecond extends StatefulWidget {
   _ProductContentSecondState createState() => _ProductContentSecondState();
 }
 
-class _ProductContentSecondState extends State<ProductContentSecond> {
-  ProductContentItem _productContent;
+class _ProductContentSecondState extends State<ProductContentSecond> with AutomaticKeepAliveClientMixin{
+  var _id;
+
+  // 继承 AutomaticKeepAliveClientMixin 内保持页面状态
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    // 把上一层的对象数据，赋值给当前组件
-    this._productContent = widget._productContentList[0];
+    this._id = widget._productContentList[0].sId;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("商品详情"),
+       child:Column(
+        children: <Widget>[
+           Expanded(
+              child: InAppWebView(
+                    initialUrl: "http://jd.itying.com/pcontent?id=${ this._id}",                   
+                    onProgressChanged: (InAppWebViewController controller, int progress) {
+                      
+                    },
+            ),
+           )
+        ],
+      ),
     );
   }
 }
