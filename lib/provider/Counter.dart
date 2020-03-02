@@ -11,13 +11,13 @@ class Counter with ChangeNotifier {
     this._count = 10;
   }
 
-  // 获取状态 让外部可以拿到 私有方法 _count
+  // 获取状态 让外部通过 count 拿到 私有变量 _count 的数据
   int get count => _count;
 
   // 更新状态
   incCount() {
     this._count++;
-    // 更新状态
+    // 改变状态后 通知其他页面刷新数据
     notifyListeners();
   }
 }
