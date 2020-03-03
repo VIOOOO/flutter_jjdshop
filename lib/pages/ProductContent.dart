@@ -20,6 +20,9 @@ import '../services/CartServices.dart';
 // 事件广播
 import '../services/EventBus.dart';
 
+// 弹出窗
+import 'package:fluttertoast/fluttertoast.dart';
+
 // 产品详情呀
 
 class ProductContentPage extends StatefulWidget {
@@ -159,16 +162,21 @@ class _ProductContentPageState extends State<ProductContentPage> {
                       child: Row(
                         // 底部固定菜单， 左边固定宽，右边两个自适应按钮
                         children: <Widget>[
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: ScreenAdapter.height(10)),
-                            width: 100,
-                            height: ScreenAdapter.width(88),
-                            child: Column(
-                              children: <Widget>[
-                                Icon(Icons.shopping_cart),
-                                Text("购物车"),
-                              ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/cart');
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  top: ScreenAdapter.height(10)),
+                              width: 100,
+                              height: ScreenAdapter.width(88),
+                              child: Column(
+                                children: <Widget>[
+                                  Icon(Icons.shopping_cart),
+                                  Text("购物车"),
+                                ],
+                              ),
                             ),
                           ),
                           Expanded(
@@ -189,6 +197,12 @@ class _ProductContentPageState extends State<ProductContentPage> {
                                       this._productContentList[0]);
                                   // 需要等待 购物车数据添加好后 调用Provider 更新数据
                                   cartProvider.updateCartList();
+                                  // 提示弹出窗
+                                  Fluttertoast.showToast(
+                                    msg: '加入购物车成功',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                  );
                                 }
                               },
                             ),

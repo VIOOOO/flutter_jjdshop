@@ -93,7 +93,12 @@ class CartServices {
     // 在对象内增加数据
     data['_id'] = item.sId;
     data['title'] = item.title;
-    data['price'] = item.price;
+    // 处理 string 和 int 类型的价格,如果不是数字类型则 转成数字，避免后面的运算出错
+    if (item.price is int || item.price is double) {
+      data['price'] = item.price;
+    } else {
+      data['price'] = double.parse(item.price);
+    }
     data['selectedAttr'] = item.selectedAttr;
     data['count'] = item.count;
     data['pic'] = pic;

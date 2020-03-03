@@ -7,13 +7,15 @@ import '../services/Storage.dart';
 class Cart with ChangeNotifier {
   // 创建状态 在不同组件之间实现共享
   List _cartList = [];
-
   // 全选
   bool _isCheckedAll = false;
+  // 总价
+  double _allPrice = 0;
 
   // 获取状态 让外部通过 cartList 可以拿到 私有变量  _cartList 的数据
   List get cartList => this._cartList;
   bool get isCheckedAll => this._isCheckedAll;
+  double get allPrice => this._allPrice;
 
   Cart() {
     this.init();
@@ -29,6 +31,9 @@ class Cart with ChangeNotifier {
     }
     // 获取全选的状态
     this._isCheckedAll = this.isCheckAll();
+    // 计算总价
+    this.computeAllPrice();
+
     // 通知页面刷新数据
     notifyListeners();
   }
@@ -41,6 +46,8 @@ class Cart with ChangeNotifier {
   // 保存更改的数据
   itemCountChange() {
     Storage.setString('cartList', json.encode(this._cartList));
+    // 计算总价
+    this.computeAllPrice();
     // 通知页面刷新数据
     notifyListeners();
   }
@@ -51,6 +58,9 @@ class Cart with ChangeNotifier {
       this._cartList[i]["checked"] = value;
     }
     this._isCheckedAll = value;
+    // 计算总价
+    this.computeAllPrice();
+
     Storage.setString('cartList', json.encode(this._cartList));
     // 通知页面刷新数据
     notifyListeners();
@@ -77,8 +87,50 @@ class Cart with ChangeNotifier {
     } else {
       this._isCheckedAll = false;
     }
+    // 计算总价
+    this.computeAllPrice();
+
     Storage.setString('cartList', json.encode(this._cartList));
     // 通知页面刷新数据
+    notifyListeners();
+  }
+
+  // 计算总价
+  computeAllPrice() {
+    double tempAllPrice = 0;
+    for (var i = 0; i < this._cartList.length; i++) {
+      if (this._cartList[i]["checked"] == true) {
+        tempAllPrice += this._cartList[i]["price"] * this._cartList[i]["count"];
+      }
+    }
+    this._allPrice = tempAllPrice;
+    // 通知页面刷新数据
+    notifyListeners();
+  }
+
+  //删除数据
+  removeItem() {
+    //  1        2
+    // ['1111','2222','333333333','4444444444']
+    // 错误的写法 
+    // 此方法删除多个数据时候，依据索引值删错元素，但每删除一个元素列表内索引会改变，会导致后面删错数据
+    // for (var i = 0; i < this._cartList.length; i++) {
+    //   if (this._cartList[i]["checked"] == true) {
+    //      this._cartList.removeAt(i);
+    //   }
+    // }
+
+    List tempList = [];
+    // 保存下 没打钩的数据，重新保存到缓存
+    for (var i = 0; i < this._cartList.length; i++) {
+      if (this._cartList[i]["checked"] == false) {
+        tempList.add(this._cartList[i]);
+      }
+    }
+    this._cartList = tempList;
+    //计算总价
+    this.computeAllPrice();
+    Storage.setString("cartList", json.encode(this._cartList));
     notifyListeners();
   }
 }

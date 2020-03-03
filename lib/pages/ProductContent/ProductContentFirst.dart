@@ -10,9 +10,10 @@ import '../../services/EventBus.dart';
 // 状态管理
 import 'package:provider/provider.dart';
 import '../../provider/Cart.dart';
+// 弹出窗
+import 'package:fluttertoast/fluttertoast.dart';
 
 // 商品详情-商品页面
-
 class ProductContentFrist extends StatefulWidget {
   // 接收主页面传过来的商品数据
   final List _productContentList;
@@ -182,7 +183,11 @@ class _ProductContentFristState extends State<ProductContentFrist>
             _changeAttr(attrItem.cate, item["title"], setBottomState);
           },
           child: Chip(
-            label: Text("${item["title"]}"),
+            label: Text(
+              "${item["title"]}",
+              style: TextStyle(
+                  color: item["checked"] ? Colors.white : Colors.black54),
+            ),
             padding: EdgeInsets.all(10),
             backgroundColor: item["checked"] ? Colors.red : Colors.black26,
           ),
@@ -299,6 +304,12 @@ class _ProductContentFristState extends State<ProductContentFrist>
 
                                   // 需要等待 购物车数据添加好后 调用Provider 更新数据
                                   this.cartProvider.updateCartList();
+                                  // 提示弹出窗
+                                  Fluttertoast.showToast(
+                                    msg: '加入购物车成功',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                  );
                                 },
                               ),
                             ),

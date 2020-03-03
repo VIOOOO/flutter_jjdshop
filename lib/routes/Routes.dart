@@ -4,6 +4,7 @@ import '../pages/tabs/Tabs.dart';
 import '../pages/Search.dart';
 import '../pages/ProuctList.dart';
 import '../pages/ProductContent.dart';
+import '../pages/tabs/Cart.dart';
 
 
 
@@ -17,6 +18,7 @@ final routes = {
   // '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   // 搜索页
   '/search':(context) => SearchPage(),
+  '/cart':(context) => CartPage(),
   '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
   '/productContent':(context,{arguments}) => ProductContentPage(arguments:arguments),
 

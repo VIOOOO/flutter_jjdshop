@@ -20,15 +20,12 @@ class _CartItemState extends State<CartItem> {
   Map _itemData;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // 获取父组件传入的值
-    this._itemData = widget._itemData;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // 获取父组件传入的值
+    // 在购物车删除商品时候， build 方法会重新渲染，但是 initState 不会触发，导致数据不更新，
+    // 购物车会感觉删错东西，其实删对的，刷新页面可以看见，所以 将this._itemData 放在刷新的 build 立面重新赋值
+    this._itemData = widget._itemData;
+
     var cartProvider = Provider.of<Cart>(context);
 
     return Container(
