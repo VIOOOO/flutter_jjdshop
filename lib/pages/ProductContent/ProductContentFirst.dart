@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../services/CartServices.dart';
 import '../../services/ScreenAdapter.dart';
 import '../../widget/JdButton.dart';
 import '../../model/ProductContentModel.dart';
 import '../../config/Config.dart';
+import '../ProductContent/CartNum.dart';
 
 // 广播
 import '../../services/EventBus.dart';
@@ -157,6 +159,8 @@ class _ProductContentFristState extends State<ProductContentFrist>
     // print(tempArr.join(','));
     setState(() {
       this._selectedValue = tempArr.join(',');
+      // 给筛选属性赋值 让商品选项的值赋值到数据模型 对象内创建的状态里
+      this._productContent.selectedAttr = this._selectedValue;
     });
   }
 
@@ -240,6 +244,29 @@ class _ProductContentFristState extends State<ProductContentFrist>
                           Column(
                             // 调用弹出组件，并传入数据状态
                             children: _getAttrWidget(setBottomState),
+                          ),
+                          Divider(),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            height: ScreenAdapter.height(80),
+                            child: InkWell(
+                              onTap: () {
+                                // 底部弹出菜单
+                                _attrBottomSheet();
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "数量: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: 10),
+                                  // 将商品出人 数量组件
+                                  CartNum(this._productContent),
+                                ],
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -256,9 +283,13 @@ class _ProductContentFristState extends State<ProductContentFrist>
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: JdButton(
                                 color: Color.fromRGBO(253, 1, 0, 0.9),
-                                text: "加入购物车",
+                                // text: "加入购物车",
                                 cb: () {
                                   print("加入购物车");
+                                  CartServices.addCart(this._productContent);
+            
+                                  // 关闭底部筛选属性
+                                  Navigator.of(context).pop();
                                 },
                               ),
                             ),
