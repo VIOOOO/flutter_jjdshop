@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../../services/ScreenAdapter.dart';
 import './CartNum.dart';
 
-// 购物车 列表页面子组件
+// 引入状态管理库 和自己创建的状态文件
+import 'package:provider/provider.dart';
+import '../../provider/Cart.dart';
 
+// 购物车 列表页面子组件
 class CartItem extends StatefulWidget {
   // 接收出入的数据
   Map _itemData;
@@ -26,6 +29,8 @@ class _CartItemState extends State<CartItem> {
 
   @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<Cart>(context);
+
     return Container(
       height: ScreenAdapter.height(200),
       padding: EdgeInsets.all(5),
@@ -36,8 +41,14 @@ class _CartItemState extends State<CartItem> {
           Container(
             width: ScreenAdapter.width(60),
             child: Checkbox(
-              value: true,
-              onChanged: (val) {},
+              value: _itemData["checked"],
+              onChanged: (val) {
+                // 选择和取消选择
+                setState(() {
+                  _itemData["checked"] = !_itemData["checked"];
+                });
+                cartProvider.itemChage();
+              },
               activeColor: Colors.pink,
             ),
           ),
