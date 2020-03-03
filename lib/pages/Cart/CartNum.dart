@@ -8,13 +8,23 @@ import '../../services/ScreenAdapter.dart';
 // 购物车 数量子组件
 
 class CartNum extends StatefulWidget {
-  CartNum({Key key}) : super(key: key);
+  Map _itemData;
+  CartNum(this._itemData, {Key key}) : super(key: key);
 
   @override
   _CartNumState createState() => _CartNumState();
 }
 
 class _CartNumState extends State<CartNum> {
+  Map _itemData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._itemData = widget._itemData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -77,7 +87,7 @@ class _CartNumState extends State<CartNum> {
         right: BorderSide(width: 1, color: Colors.black12),
       )),
       height: ScreenAdapter.height(45),
-      child: Text("1"),
+      child: Text("${this._itemData["count"]}"),
     );
   }
 }

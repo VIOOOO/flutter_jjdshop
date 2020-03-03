@@ -12,6 +12,10 @@ import '../config/Config.dart';
 import 'package:dio/dio.dart';
 import '../model/ProductContentModel.dart';
 import '../widget/LoadingWidget.dart';
+// 状态管理
+import 'package:provider/provider.dart';
+import '../provider/Cart.dart';
+import '../services/CartServices.dart';
 
 // 事件广播
 import '../services/EventBus.dart';
@@ -51,6 +55,8 @@ class _ProductContentPageState extends State<ProductContentPage> {
 
   @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<Cart>(context);
+
     // DefaultTabController 分页组件和 TabBer 组件 TabBarView 组件配合使用
     return DefaultTabController(
       length: 3,
@@ -170,15 +176,19 @@ class _ProductContentPageState extends State<ProductContentPage> {
                             child: JdButton(
                               color: Color.fromRGBO(253, 1, 0, 0.9),
                               text: "加入购物车",
-                              cb: () {
-
-                                if (this._productContentList[0].attr.lenght >0) {
+                              cb: () async {
+                                if (this._productContentList[0].attr.length >
+                                    0) {
                                   // 事件广播 让子页面里监听到后触发对应事件
                                   // 弹出筛选菜单
                                   eventBus
-                                      .fire(new ProductContentEvent("加入购物车"));
+                                      .fire(new ProductContentEvent('加入购物车'));
                                 } else {
-                                  print("加入购物车操作");
+                                  // print("加入购物车操作");
+                                  await CartServices.addCart(
+                                      this._productContentList[0]);
+                                  // 需要等待 购物车数据添加好后 调用Provider 更新数据
+                                  cartProvider.updateCartList();
                                 }
                               },
                             ),
@@ -189,15 +199,15 @@ class _ProductContentPageState extends State<ProductContentPage> {
                               color: Color.fromRGBO(225, 165, 0, 0.9),
                               text: "立即购买",
                               cb: () {
-                                print(this._productContentList[0].attr.lenght);
-                                // if (this._productContentList[0].attr.lenght>0) {
-                                //   // 事件广播 让子页面里监听到后触发对应事件
-                                //   // 弹出筛选菜单
-                                //   eventBus
-                                //       .fire(new ProductContentEvent("立即购买"));
-                                // } else {
-                                //   print("立即购买操作");
-                                // }
+                                if (this._productContentList[0].attr.length >
+                                    0) {
+                                  // 事件广播 让子页面里监听到后触发对应事件
+                                  // 弹出筛选菜单
+                                  eventBus
+                                      .fire(new ProductContentEvent("立即购买"));
+                                } else {
+                                  print("立即购买操作");
+                                }
                               },
                             ),
                           ),

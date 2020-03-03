@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import '../../services/ScreenAdapter.dart';
 
 // 引入状态管理库 和自己创建的状态文件
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 // import '../../provider/Counter.dart';
-// import '../../provider/Cart.dart';
+import '../../provider/Cart.dart';
 
 import '../Cart/CartItem.dart';
-import '../Cart/CartNum.dart';
 
 // 购物车页面
 class CartPage extends StatefulWidget {
@@ -19,11 +18,17 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   @override
+  void initState() {
+    super.initState();
+    print("cart");
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenAdapter.init(context);
     // 获取状态管理内的状态类
     // var counterProvider = Provider.of<Counter>(context);
-    // var cartProvider = Provider.of<Cart>(context);
+    var cartProvider = Provider.of<Cart>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,67 +40,72 @@ class _CartPageState extends State<CartPage> {
           )
         ],
       ),
-      body: Stack(
-        children: <Widget>[
-          ListView(
-            children: <Widget>[
-              CartItem(),
-              CartItem(),
-              CartItem(),
-              CartItem(),
-            ],
-          ),
-          Positioned(
-            // 定位在底部
-            bottom: 0,
-            width: ScreenAdapter.width(750),
-            height: ScreenAdapter.height(78),
-            child: Container(
-              width: ScreenAdapter.width(750),
-              height: ScreenAdapter.height(78),
-              color: Colors.red,
-              child: Container(
-                decoration: BoxDecoration(
-                  border:
-                      Border(top: BorderSide(width: 1, color: Colors.black12)),
-                  color: Colors.white,
-                ),
-                width: ScreenAdapter.width(750),
-                height: ScreenAdapter.height(78),
-                child: Stack(
+      body: cartProvider.cartList.length > 0
+          ? Stack(
+              children: <Widget>[
+                ListView(
                   children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
+                    Column(
+                        children: cartProvider.cartList.map((value) {
+                      return CartItem(value);
+                    }).toList()),
+                    SizedBox(height: ScreenAdapter.height(100))
+                  ],
+                ),
+                Positioned(
+                  // 定位在底部
+                  bottom: 0,
+                  width: ScreenAdapter.width(750),
+                  height: ScreenAdapter.height(78),
+                  child: Container(
+                    width: ScreenAdapter.width(750),
+                    height: ScreenAdapter.height(78),
+                    color: Colors.red,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(width: 1, color: Colors.black12)),
+                        color: Colors.white,
+                      ),
+                      width: ScreenAdapter.width(750),
+                      height: ScreenAdapter.height(78),
+                      child: Stack(
                         children: <Widget>[
-                          Container(
-                            width: ScreenAdapter.width(60),
-                            child: Checkbox(
-                              value: true,
-                              activeColor: Colors.pink,
-                              onChanged: (val) {},
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  width: ScreenAdapter.width(60),
+                                  child: Checkbox(
+                                    value: true,
+                                    activeColor: Colors.pink,
+                                    onChanged: (val) {},
+                                  ),
+                                ),
+                                Text("全选")
+                              ],
                             ),
                           ),
-                          Text("全选")
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: RaisedButton(
+                              child: Text("结算",
+                                  style: TextStyle(color: Colors.white)),
+                              color: Colors.red,
+                              onPressed: () {},
+                            ),
+                          )
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: RaisedButton(
-                        child:
-                            Text("结算", style: TextStyle(color: Colors.white)),
-                        color: Colors.red,
-                        onPressed: () {},
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
+            )
+          : Center(
+              child: Text("购物车空空的..."),
             ),
-          ),
-        ],
-      ),
     );
 
     // return Scaffold(

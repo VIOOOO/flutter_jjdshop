@@ -5,9 +5,11 @@ import '../../widget/JdButton.dart';
 import '../../model/ProductContentModel.dart';
 import '../../config/Config.dart';
 import '../ProductContent/CartNum.dart';
-
 // 广播
 import '../../services/EventBus.dart';
+// 状态管理
+import 'package:provider/provider.dart';
+import '../../provider/Cart.dart';
 
 // 商品详情-商品页面
 
@@ -37,6 +39,8 @@ class _ProductContentFristState extends State<ProductContentFrist>
 
   var actionEventBus;
 
+  var cartProvider;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +58,7 @@ class _ProductContentFristState extends State<ProductContentFrist>
 
     // 若事件监听广播 在离开页面时候不销毁，则每次进入页面会再创建监听事件
     this.actionEventBus = eventBus.on<ProductContentEvent>().listen((str) {
+      print("广播事件：");
       print(str);
       // 监听到事件后弹出底部弹出框
       this._attrBottomSheet();
@@ -283,13 +288,17 @@ class _ProductContentFristState extends State<ProductContentFrist>
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: JdButton(
                                 color: Color.fromRGBO(253, 1, 0, 0.9),
-                                // text: "加入购物车",
-                                cb: () {
-                                  print("加入购物车");
-                                  CartServices.addCart(this._productContent);
-            
+                                text: "加入购物车",
+                                cb: () async {
+                                  // print("加入购物车");
+                                  await CartServices.addCart(
+                                      this._productContent);
+
                                   // 关闭底部筛选属性
                                   Navigator.of(context).pop();
+
+                                  // 需要等待 购物车数据添加好后 调用Provider 更新数据
+                                  this.cartProvider.updateCartList();
                                 },
                               ),
                             ),
@@ -320,6 +329,7 @@ class _ProductContentFristState extends State<ProductContentFrist>
 
   @override
   Widget build(BuildContext context) {
+    this.cartProvider = Provider.of<Cart>(context);
     // 图片处理
     String pic = Config.domain + this._productContent.pic;
     pic = pic.replaceAll('\\', '/');
