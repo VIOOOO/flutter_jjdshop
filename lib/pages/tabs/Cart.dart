@@ -25,6 +25,12 @@ class _CartPageState extends State<CartPage> {
     print("cart");
   }
 
+  // 去结算
+  doCheckOut() {
+    //判断用户有没有登录    保存购物车选中的数据
+    Navigator.pushNamed(context, '/checkOut');
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenAdapter.init(context);
@@ -114,7 +120,7 @@ class _CartPageState extends State<CartPage> {
                                     child: Text("结算",
                                         style: TextStyle(color: Colors.white)),
                                     color: Colors.red,
-                                    onPressed: () {},
+                                    onPressed: doCheckOut,
                                   ),
                                 )
                               : Align(
