@@ -47,34 +47,39 @@ class _UserPageState extends State<UserPage> {
                   ),
                 ),
 
-                // // 登录前
-                // Expanded(
-                //   flex: 1,
-                //   child: Text("登录/注册", style: TextStyle(color: Colors.white)),
-                // ),
-
-                // 登录后
+                // 登录前
                 Expanded(
                   flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "用户名：124124125",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ScreenAdapter.size(32)),
-                      ),
-                      Text(
-                        "普通会员",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: ScreenAdapter.size(24)),
-                      ),
-                    ],
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, '/loain');
+                    },
+                    child: Text("登录/注册", style: TextStyle(color: Colors.white)),
                   ),
                 ),
+
+                // // 登录后
+                // Expanded(
+                //   flex: 1,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: <Widget>[
+                //       Text(
+                //         "用户名：124124125",
+                //         style: TextStyle(
+                //             color: Colors.white,
+                //             fontSize: ScreenAdapter.size(32)),
+                //       ),
+                //       Text(
+                //         "普通会员",
+                //         style: TextStyle(
+                //             color: Colors.white,
+                //             fontSize: ScreenAdapter.size(24)),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

@@ -5,6 +5,10 @@ import '../pages/Search.dart';
 import '../pages/ProuctList.dart';
 import '../pages/ProductContent.dart';
 import '../pages/tabs/Cart.dart';
+import '../pages/Login.dart';
+import '../pages/RegisterFirst.dart';
+import '../pages/RegisterSecond.dart';
+import '../pages/RegisterThird.dart';
 
 
 
@@ -17,8 +21,12 @@ final routes = {
   // // 需要传参， {arguments} 表示可选参数， 参数名与接收方法对应 arguments
   // '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   // 搜索页
-  '/search':(context) => SearchPage(),
-  '/cart':(context) => CartPage(),
+  '/search': (context) => SearchPage(),
+  '/cart': (context) => CartPage(),
+  '/loain': (context) => LoainPage(), 
+  '/registerFirst': (context) => RegisterFirstPage(), 
+  '/registerSecond': (context) => RegisterSecondPage(), 
+  '/registerThird': (context) => RegisterThirdPage(), 
   '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
   '/productContent':(context,{arguments}) => ProductContentPage(arguments:arguments),
 
