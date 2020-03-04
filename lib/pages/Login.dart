@@ -12,14 +12,14 @@ import 'dart:convert';
 import '../services/EventBus.dart';
 
 // 登录页面
-class LoainPage extends StatefulWidget {
-  LoainPage({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key}) : super(key: key);
 
   @override
-  _LoainPageState createState() => _LoainPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoainPageState extends State<LoainPage> {
+class _LoginPageState extends State<LoginPage> {
   //监听登录页面销毁的事件 事件广播到用户中心接收 触发广播对应的事件
   dispose() {
     super.dispose();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/ScreenAdapter.dart';
+import 'package:provider/provider.dart';
+import '../provider/CheckOut.dart';
 
 // 结算页面
 class CheckOutPage extends StatefulWidget {
@@ -11,14 +13,12 @@ class CheckOutPage extends StatefulWidget {
 
 class _CheckOutPageState extends State<CheckOutPage> {
   // 商品组件
-  Widget _checkOutItem() {
+  Widget _checkOutItem(item) {
     return Row(
       children: <Widget>[
         Container(
           width: ScreenAdapter.width(160),
-          child: Image.network(
-              "https://www.itying.com/images/flutter/list2.jpg",
-              fit: BoxFit.cover),
+          child: Image.network("${item["pic"]}", fit: BoxFit.cover),
         ),
         Expanded(
             flex: 1,
@@ -28,8 +28,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Flutter仿京东商城项目实战视频教程", maxLines: 2),
-                  Text("白色,175", maxLines: 2),
+                  Text("${item["title"]}", maxLines: 2),
+                  Text("${item["selectedAttr"]}", maxLines: 2),
                   Stack(
                     children: <Widget>[
                       Align(
@@ -39,7 +39,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Text("x2"),
+                        child: Text("x${item["count"]}"),
                       )
                     ],
                   )
@@ -52,6 +52,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
   @override
   Widget build(BuildContext context) {
+    var checkOutProvider = Provider.of<CheckOut>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("结算"),
@@ -92,13 +94,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 color: Colors.white,
                 padding: EdgeInsets.all(ScreenAdapter.width(20)),
                 child: Column(
-                  children: <Widget>[
-                    _checkOutItem(),
-                    Divider(),
-                    _checkOutItem(),
-                    Divider(),
-                    _checkOutItem()
-                  ],
+                  children: checkOutProvider.checkOutListData.map((value) {
+                    return Column(
+                      children: <Widget>[
+                        _checkOutItem(value),
+                        Divider(),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
               SizedBox(height: 20),
@@ -123,6 +126,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
             width: ScreenAdapter.width(750),
             height: ScreenAdapter.height(100),
             child: Container(
+              padding: EdgeInsets.all(5),
               width: ScreenAdapter.width(750),
               height: ScreenAdapter.height(100),
               decoration: BoxDecoration(

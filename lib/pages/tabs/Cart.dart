@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../services/CartServices.dart';
+import '../../services/UserServices.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../services/ScreenAdapter.dart';
 
 // 引入状态管理库 和自己创建的状态文件
 import 'package:provider/provider.dart';
 // import '../../provider/Counter.dart';
 import '../../provider/Cart.dart';
+import '../../provider/CheckOut.dart';
 
 import '../Cart/CartItem.dart';
 
@@ -19,6 +23,8 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   // 编辑购物车开关
   bool _isEdit = false;
+
+  var checkOutProvider;
   @override
   void initState() {
     super.initState();
@@ -26,9 +32,33 @@ class _CartPageState extends State<CartPage> {
   }
 
   // 去结算
-  doCheckOut() {
-    //判断用户有没有登录    保存购物车选中的数据
-    Navigator.pushNamed(context, '/checkOut');
+  doCheckOut() async {
+    //1、获取购物车选中的数据
+    List checkOutData = await CartServices.getCheckOutData();
+    //2、保存购物车选中的数据在 provider 中，其他组件就可以获取该数据
+    this.checkOutProvider.changeCheckOutListData(checkOutData);
+    //3、购物车有没有选中的数据
+    if (checkOutData.length > 0) {
+      //4、判断用户有没有登录
+      var loginState = await UserServices.getUserLoginState();
+      if (loginState) {
+        // 如果已经登录则跳转到结算页面
+        Navigator.pushNamed(context, '/checkOut');
+      } else {
+        Fluttertoast.showToast(
+          msg: '您还没有登录，请登录以后再去结算',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+        Navigator.pushNamed(context, '/login');
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: '购物车没有选中的数据',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    }
   }
 
   @override
@@ -37,6 +67,7 @@ class _CartPageState extends State<CartPage> {
     // 获取状态管理内的状态类
     // var counterProvider = Provider.of<Counter>(context);
     var cartProvider = Provider.of<Cart>(context);
+    checkOutProvider = Provider.of<CheckOut>(context);
 
     return Scaffold(
       appBar: AppBar(

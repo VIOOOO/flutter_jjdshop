@@ -86,7 +86,7 @@ class _UserPageState extends State<UserPage> {
                         flex: 1,
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(context, '/loain');
+                            Navigator.pushNamed(context, '/login');
                           },
                           child: Text("登录/注册",
                               style: TextStyle(color: Colors.white)),

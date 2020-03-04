@@ -3,8 +3,9 @@ import 'routes/Routes.dart';
 
 // 引入状态管理库 和自己创建的状态文件
 import 'package:provider/provider.dart';
-import 'provider/Counter.dart';
+// import 'provider/Counter.dart';
 import 'provider/Cart.dart';
+import 'provider/CheckOut.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
          // 调用 ChangeNotifierProvider 方法 创建的类里面写 自己创建的状态类要一致
         // ChangeNotifierProvider(create: (_) => Counter()),
         ChangeNotifierProvider(create: (_) => Cart()),
+        ChangeNotifierProvider(create: (_) => CheckOut()),
       ],
       child: MaterialApp(
         // home: Tabs(),

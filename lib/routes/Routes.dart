@@ -24,7 +24,7 @@ final routes = {
   // 搜索页
   '/search': (context) => SearchPage(),
   '/cart': (context) => CartPage(),
-  '/loain': (context) => LoainPage(), 
+  '/login': (context) => LoginPage(), 
   '/registerFirst': (context) => RegisterFirstPage(), 
   '/registerSecond': (context,{arguments}) => RegisterSecondPage(arguments: arguments),
   '/registerThird': (context,{arguments}) => RegisterThirdPage(arguments: arguments), 
