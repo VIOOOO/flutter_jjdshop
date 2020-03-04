@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         // 隐藏右上角 debug 标志
         debugShowCheckedModeBanner: false,
         // 初始化路由
-        initialRoute: '/loain',
+        initialRoute: '/',
         onGenerateRoute: onGenerateRoute,
 
         // 主题颜色

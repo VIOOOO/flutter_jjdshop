@@ -3,15 +3,79 @@ import '../services/ScreenAdapter.dart';
 import '../widget/JdText.dart';
 import '../widget/JdButton.dart';
 
+import '../config/Config.dart';
+import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../services/Storage.dart';
+import 'dart:convert';
+
+//引入Tabs
+import '../pages/tabs/Tabs.dart';
+
 // 注册 步骤一
 class RegisterThirdPage extends StatefulWidget {
-  RegisterThirdPage({Key key}) : super(key: key);
+  Map arguments;
+  RegisterThirdPage({Key key, this.arguments}) : super(key: key);
 
   @override
   _RegisterThirdPageState createState() => _RegisterThirdPageState();
 }
 
 class _RegisterThirdPageState extends State<RegisterThirdPage> {
+  String tel;
+  String code;
+  String password = '';
+  String rpassword = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.tel = widget.arguments["tel"];
+    this.code = widget.arguments["code"];
+  }
+
+  //注册
+  doRegister() async {
+    if (password.length < 6) {
+      Fluttertoast.showToast(
+        msg: '密码长度不能小于6位',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    } else if (rpassword != password) {
+      Fluttertoast.showToast(
+        msg: '密码和确认密码不一致',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    } else {
+      var api = '${Config.domain}api/register';
+      var response = await Dio().post(
+        api,
+        data: {"tel": this.tel, "code": this.code, "password": this.password},
+      );
+      if (response.data["success"]) {
+        // 保存用户信息
+        Storage.setString('userInfo', json.encode(response.data["userinfo"]));
+
+        //  返回到根
+        Navigator.pushAndRemoveUntil(
+          context,
+          new MaterialPageRoute(builder: (context) => new Tabs()),
+          (route) => route == null,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: '${response.data["message"]}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +91,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
               text: "请输入密码",
               password: true,
               onChanged: (value) {
-                print(value);
+                this.password = value;
               },
             ),
             SizedBox(height: 10),
@@ -35,7 +99,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
               text: "请输入确认密码",
               password: true,
               onChanged: (value) {
-                print(value);
+                this.rpassword = value;
               },
             ),
             SizedBox(height: 20),
@@ -43,9 +107,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
               text: "登录",
               color: Colors.red,
               height: 74,
-              cb: () {
-                print("登录");
-              },
+              cb: this.doRegister,
             )
           ],
         ),

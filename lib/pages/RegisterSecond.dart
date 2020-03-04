@@ -72,7 +72,8 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
     var response =
         await Dio().post(api, data: {"tel": this.tel, "code": this.code});
     if (response.data["success"]) {
-      Navigator.pushNamed(context, '/registerThird');
+      Navigator.pushNamed(context, '/registerThird',
+          arguments: {"tel": this.tel, "code": this.code});
     } else {
       Fluttertoast.showToast(
         msg: '${response.data["message"]}',
@@ -100,7 +101,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
             SizedBox(height: 40),
             Stack(
               children: <Widget>[
-               Container(
+                Container(
                   child: JdText(
                     text: "请输入验证码",
                     onChanged: (value) {

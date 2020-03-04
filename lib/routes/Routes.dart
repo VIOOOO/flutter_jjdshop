@@ -26,7 +26,7 @@ final routes = {
   '/loain': (context) => LoainPage(), 
   '/registerFirst': (context) => RegisterFirstPage(), 
   '/registerSecond': (context,{arguments}) => RegisterSecondPage(arguments: arguments),
-  '/registerThird': (context) => RegisterThirdPage(), 
+  '/registerThird': (context,{arguments}) => RegisterThirdPage(arguments: arguments), 
   '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
   '/productContent':(context,{arguments}) => ProductContentPage(arguments:arguments),
 
