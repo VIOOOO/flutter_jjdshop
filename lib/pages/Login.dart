@@ -3,6 +3,14 @@ import '../services/ScreenAdapter.dart';
 import '../widget/JdText.dart';
 import '../widget/JdButton.dart';
 
+import '../config/Config.dart';
+import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../services/Storage.dart';
+import 'dart:convert';
+
+import '../services/EventBus.dart';
+
 // 登录页面
 class LoainPage extends StatefulWidget {
   LoainPage({Key key}) : super(key: key);
@@ -12,6 +20,54 @@ class LoainPage extends StatefulWidget {
 }
 
 class _LoainPageState extends State<LoainPage> {
+  //监听登录页面销毁的事件 事件广播到用户中心接收 触发广播对应的事件
+  dispose() {
+    super.dispose();
+    eventBus.fire(new UserEvent('登录成功...'));
+  }
+
+  String username = '';
+  String password = '';
+
+  //  登录
+  doLogin() async {
+    RegExp reg = new RegExp(r"^1\d{10}$");
+    if (!reg.hasMatch(this.username)) {
+      Fluttertoast.showToast(
+        msg: '手机号格式不正确',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    } else if (password.length < 6) {
+      Fluttertoast.showToast(
+        msg: '密码不正确',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
+    } else {
+      var api = '${Config.domain}api/doLogin';
+      var response = await Dio().post(
+        api,
+        data: {"username": this.username, "password": this.password},
+      );
+
+      if (response.data["success"]) {
+        print(response.data);
+        //保存用户信息
+        Storage.setString('userInfo', json.encode(response.data["userinfo"]));
+
+        // 关闭弹出窗
+        Navigator.pop(context);
+      } else {
+        Fluttertoast.showToast(
+          msg: '${response.data["message"]}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +109,8 @@ class _LoainPageState extends State<LoainPage> {
             JdText(
               text: "请输入用户名",
               onChanged: (value) {
-                print(value);
+                // print(value);
+                this.username = value;
               },
             ),
             SizedBox(height: 10),
@@ -61,7 +118,8 @@ class _LoainPageState extends State<LoainPage> {
               text: "请输入密码",
               password: true,
               onChanged: (value) {
-                print(value);
+                // print(value);
+                this.password = value;
               },
             ),
             SizedBox(height: 10),
@@ -90,9 +148,7 @@ class _LoainPageState extends State<LoainPage> {
               text: "登录",
               color: Colors.red,
               height: 74,
-              cb: () {
-                print("登录");
-              },
+              cb: doLogin,
             )
           ],
         ),

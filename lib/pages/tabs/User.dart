@@ -6,6 +6,8 @@ import '../../services/UserServices.dart';
 import 'dart:convert';
 import '../../services/Storage.dart';
 
+import '../../services/EventBus.dart';
+
 // 我的页面
 class UserPage extends StatefulWidget {
   UserPage({Key key}) : super(key: key);
@@ -23,13 +25,20 @@ class _UserPageState extends State<UserPage> {
     // TODO: implement initState
     super.initState();
     this._getUserinfo();
+
+    // 当登录页面返回时候，不会触发当前页面的 iniState 方法，需要事件广播
+    //监听登录页面改变的事件, 等待广播
+    eventBus.on<UserEvent>().listen((event) {
+      print(event.str);
+      this._getUserinfo();
+    });
   }
 
   _getUserinfo() async {
     var isLogin = await UserServices.getUserLoginState();
     var userInfo = await UserServices.getUserInfo();
-      // print(isLogin);
-      // print(userInfo);
+    // print(isLogin);
+    // print(userInfo);
 
     setState(() {
       this.userInfo = userInfo;
@@ -136,13 +145,19 @@ class _UserPageState extends State<UserPage> {
             title: Text("在线客服"),
           ),
           Divider(),
-          JdButton(
-            text: "退出登录",
-            cb: () {
-              UserServices.loginOut();
-              this._getUserinfo();
-            },
-          )
+          this.isLogin
+              ? Container(
+                  padding: EdgeInsets.all(20),
+                  child: JdButton(
+                    color: Colors.red,
+                    text: "退出登录",
+                    cb: () {
+                      UserServices.loginOut();
+                      this._getUserinfo();
+                    },
+                  ),
+                )
+              : Text("")
         ],
       ),
     );
