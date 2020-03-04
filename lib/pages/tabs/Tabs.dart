@@ -40,7 +40,7 @@ class _TabsState extends State<Tabs> {
     return Scaffold(
       // // 若不抽离单独配置导航，可以判断页面显示不同导航，抽离会更好
       // appBar: _currentIndex != 3
-      //     ? 
+      //     ?
       //     : AppBar(
       //         title: Text("用户中心"),
       //       ),
@@ -65,8 +65,8 @@ class _TabsState extends State<Tabs> {
             this._currentIndex = index;
           });
         },
-        // // 禁止 PageView 滑动
-        // physics: NeverScrollableScrollPhysics(),
+        // 禁止 PageView 左右滑动
+        physics: NeverScrollableScrollPhysics(),
       ),
 
       //  底部导航栏

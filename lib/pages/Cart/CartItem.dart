@@ -29,7 +29,7 @@ class _CartItemState extends State<CartItem> {
     var cartProvider = Provider.of<Cart>(context);
 
     return Container(
-      height: ScreenAdapter.height(200),
+      height: ScreenAdapter.height(220),
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),

@@ -111,6 +111,9 @@ class _ProductContentFristState extends State<ProductContentFrist>
     var attr = this._attr;
     // 循环取到商品的类型和选项
     for (var i = 0; i < attr.length; i++) {
+      // 清空数组内的数据
+      attr[i].attrList.clear();
+
       // 在对应的类型内 循环选项，修改用户的选中项目
       for (var j = 0; j < attr[i].list.length; j++) {
         // 将在数据模型里创建的 attrList 空数组 接收修改为 Map 类型的 list 数组，用于后面的记住用户选中
@@ -241,6 +244,8 @@ class _ProductContentFristState extends State<ProductContentFrist>
           builder: (BuildContext context, setBottomState) {
             // GestureDetector 手势事件，点击不会有水波纹
             return GestureDetector(
+                // 点击穿透等问题 可以配置behavior
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   // 解决 showModalBottomSheet 点击弹出窗内部时候 会关闭弹出窗
                   return false;
@@ -259,23 +264,16 @@ class _ProductContentFristState extends State<ProductContentFrist>
                           Container(
                             margin: EdgeInsets.only(top: 10),
                             height: ScreenAdapter.height(80),
-                            child: InkWell(
-                              onTap: () {
-                                // 底部弹出菜单
-                                _attrBottomSheet();
-                              },
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    "数量: ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 10),
-                                  // 将商品出人 数量组件
-                                  CartNum(this._productContent),
-                                ],
-                              ),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  "数量: ",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 10),
+                                // 将商品出人 数量组件
+                                CartNum(this._productContent),
+                              ],
                             ),
                           )
                         ],

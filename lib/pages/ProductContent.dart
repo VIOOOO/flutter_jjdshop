@@ -138,6 +138,8 @@ class _ProductContentPageState extends State<ProductContentPage> {
                 children: <Widget>[
                   // 页面内容
                   TabBarView(
+                    // 禁止 TabBarView 左右滑动
+                    physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       ProductContentFrist(this._productContentList),
                       ProductContentSecond(this._productContentList),
@@ -167,14 +169,22 @@ class _ProductContentPageState extends State<ProductContentPage> {
                               Navigator.pushNamed(context, '/cart');
                             },
                             child: Container(
-                              padding: EdgeInsets.only(
-                                  top: ScreenAdapter.height(10)),
-                              width: 100,
-                              height: ScreenAdapter.width(88),
+                              padding:
+                                  EdgeInsets.only(top: ScreenAdapter.height(4)),
+                              width: ScreenAdapter.width(120),
+                              height: ScreenAdapter.width(84),
                               child: Column(
                                 children: <Widget>[
-                                  Icon(Icons.shopping_cart),
-                                  Text("购物车"),
+                                  Icon(
+                                    Icons.shopping_cart,
+                                    size: ScreenAdapter.size(36),
+                                  ),
+                                  Text(
+                                    "购物车",
+                                    style: TextStyle(
+                                      fontSize: ScreenAdapter.size(22),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
