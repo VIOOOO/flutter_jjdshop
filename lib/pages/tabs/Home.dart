@@ -6,6 +6,7 @@ import '../../config/Config.dart';
 import 'package:dio/dio.dart';
 // 轮播图类模型
 import '../../model/FocusModel.dart';
+import '../../services/SignServices.dart';
 
 // 首页
 class HomePage extends StatefulWidget {
@@ -33,6 +34,8 @@ class _HomePageState extends State<HomePage>
     this._getFocusData();
     this._getHotProductData();
     this._getBestProductData();
+    // 查看 签名加密 的结果
+    SignServices.getSign();
   }
 
   // 获取轮播图数据

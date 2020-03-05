@@ -51,6 +51,9 @@ dependencies:
   # 地址多级联动弹出窗
   city_pickers: ^0.1.30
 
+  # 接口 MD5 加密
+  crypto: 2.1.3
+
 
 dev_dependencies:
   flutter_test:
