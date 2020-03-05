@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../services/ScreenAdapter.dart';
 
+import '../../services/UserServices.dart';
+import '../../services/SignServices.dart';
+
+import '../../config/Config.dart';
+import 'package:dio/dio.dart';
+
+import '../../services/EventBus.dart';
+
 // 收货地址列表
 class AddressListPage extends StatefulWidget {
   AddressListPage({Key key}) : super(key: key);
@@ -10,6 +18,44 @@ class AddressListPage extends StatefulWidget {
 }
 
 class _AddressListPageState extends State<AddressListPage> {
+  List addressList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    this._getAddressList();
+
+    // 监听新增收货地址页面的广播通知
+    eventBus.on<AddressEvent>().listen((event) {
+      print("监听到新增收货地址页面广播通知：");
+      print(event.str);
+      this._getAddressList();
+    });
+  }
+
+  _getAddressList() async {
+    // 请求接口
+    List userinfo = await UserServices.getUserInfo();
+
+    // 获取要签名的参数
+    var tempJson = {
+      "uid": userinfo[0]['_id'],
+      "salt": userinfo[0]["salt"],
+    };
+
+    // 签名
+    var sign = SignServices.getSign(tempJson);
+
+    // 发起请求
+    var api =
+        "${Config.domain}api/addressList?uid=${userinfo[0]['_id']}&sign=${sign}";
+    var response = await Dio().get(api);
+    // print(response.data["result"]);
+    setState(() {
+      this.addressList = response.data["result"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,66 +65,49 @@ class _AddressListPageState extends State<AddressListPage> {
       body: Container(
         child: Stack(
           children: <Widget>[
-            ListView(
-              children: <Widget>[
-                SizedBox(height: 20),
-                ListTile(
-                  leading: Icon(Icons.check, color: Colors.red),
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            ListView.builder(
+                itemCount: this.addressList.length,
+                itemBuilder: (context, index) {
+                  // 如果选中的 地址则前面有个 打钩
+                  if (this.addressList[index]["default_address"] == 1) {
+                    return Column(
                       children: <Widget>[
-                        Text("张三  15201681234"),
-                        SizedBox(height: 10),
-                        Text("北京市海淀区西二旗"),
-                      ]),
-                  trailing: Icon(Icons.edit, color: Colors.blue),
-                ),
-                Divider(height: 20),
-                ListTile(
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        SizedBox(height: 20),
+                        ListTile(
+                          leading: Icon(Icons.check, color: Colors.red),
+                          title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                    "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
+                                SizedBox(height: 10),
+                                Text("${this.addressList[index]["address"]}"),
+                              ]),
+                          trailing: Icon(Icons.edit, color: Colors.blue),
+                        ),
+                        Divider(height: 20),
+                      ],
+                    );
+                  } else {
+                    return Column(
                       children: <Widget>[
-                        Text("张三  15201xxxx234"),
-                        SizedBox(height: 10),
-                        Text("北京市海defdsafaf西二旗"),
-                      ]),
-                  trailing: Icon(Icons.edit, color: Colors.blue),
-                ),
-                Divider(height: 20),
-                ListTile(
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("张三  15201xxxx234"),
-                        SizedBox(height: 10),
-                        Text("北京市海defdsafaf西二旗"),
-                      ]),
-                  trailing: Icon(Icons.edit, color: Colors.blue),
-                ),
-                Divider(height: 20),
-                ListTile(
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("张三  15201xxxx234"),
-                        SizedBox(height: 10),
-                        Text("北京市海defdsafaf西二旗"),
-                      ]),
-                  trailing: Icon(Icons.edit, color: Colors.blue),
-                ),
-                Divider(height: 20),
-                ListTile(
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("张三  15201xxxx234"),
-                        SizedBox(height: 10),
-                        Text("北京市海defdsafaf西二旗"),
-                      ]),
-                  trailing: Icon(Icons.edit, color: Colors.blue),
-                ),
-              ],
-            ),
+                        SizedBox(height: 20),
+                        ListTile(
+                          title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                    "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
+                                SizedBox(height: 10),
+                                Text("${this.addressList[index]["address"]}"),
+                              ]),
+                          trailing: Icon(Icons.edit, color: Colors.blue),
+                        ),
+                        Divider(height: 20),
+                      ],
+                    );
+                  }
+                }),
             Positioned(
               bottom: 0,
               width: ScreenAdapter.width(750),

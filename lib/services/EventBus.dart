@@ -19,6 +19,14 @@ class UserEvent {
   }
 }
 
+// 新增收货地址页面广播
+class AddressEvent {
+  String str;
+  AddressEvent(String str) {
+    this.str = str;
+  }
+}
+
 // 多个类
 // class ProductContentEvent2 {
 //   String str;
