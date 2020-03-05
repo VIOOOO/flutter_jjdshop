@@ -6,17 +6,22 @@ class JdText extends StatelessWidget {
   final String text;
   final bool password;
   final Object onChanged;
+  final int maxLines;
+  final double height;
   JdText(
       {Key key,
       this.text = "输入内容",
       this.password = false,
-      this.onChanged = null})
+      this.onChanged = null,
+      this.maxLines = 1,
+      this.height = 68})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextField(
+        maxLines: this.maxLines,
         // 输入框类型，密码框还是普通文本框，true 为密码框
         obscureText: this.password,
         decoration: InputDecoration(
@@ -29,7 +34,7 @@ class JdText extends StatelessWidget {
         //根据需要传入事件
         onChanged: this.onChanged,
       ),
-      height: ScreenAdapter.height(68),
+      height: ScreenAdapter.height(this.height),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(width: 1, color: Colors.black12),

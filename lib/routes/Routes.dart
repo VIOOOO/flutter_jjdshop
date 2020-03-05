@@ -11,6 +11,10 @@ import '../pages/RegisterSecond.dart';
 import '../pages/RegisterThird.dart';
 import '../pages/CheckOut.dart';
 
+import '../pages/Address/AddressAdd.dart';
+import '../pages/Address/AddressEdit.dart';
+import '../pages/Address/AddressList.dart';
+
 
 
 // 配置命名路由
@@ -31,6 +35,10 @@ final routes = {
   '/productListPage':(context,{arguments}) => ProductListPage(arguments:arguments),
   '/productContent':(context,{arguments}) => ProductContentPage(arguments:arguments),
   '/checkOut': (context) => CheckOutPage(), 
+  '/addressAdd': (context) => AddressAddPage(), 
+  '/addressEdit': (context) => AddressEditPage(), 
+  '/addressList': (context) => AddressListPage(), 
+
 
 
 };
