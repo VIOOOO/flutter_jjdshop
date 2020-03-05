@@ -33,6 +33,14 @@ class _AddressListPageState extends State<AddressListPage> {
     });
   }
 
+  //监听页面销毁的事件
+  dispose(){
+    super.dispose();
+    // 地址列表页面销毁时候， 通知结算页面修改默认收货地址
+    eventBus.fire(new CheckOutEvent('改收货地址成功...'));
+  }
+
+  //获取收货地址列表
   _getAddressList() async {
     // 请求接口
     List userinfo = await UserServices.getUserInfo();
@@ -56,6 +64,30 @@ class _AddressListPageState extends State<AddressListPage> {
     });
   }
 
+  //修改默认收货地址
+  _changeDefaultAddress(id) async {
+    // 请求接口
+    List userinfo = await UserServices.getUserInfo();
+
+    // 获取要签名的参数
+    var tempJson = {
+      "uid": userinfo[0]['_id'],
+      "id": id,
+      "salt": userinfo[0]["salt"],
+    };
+
+    // 签名
+    var sign = SignServices.getSign(tempJson);
+
+    // 发起请求
+    var api = "${Config.domain}api/changeDefaultAddress";
+    var response = await Dio()
+        .post(api, data: {"uid": userinfo[0]['_id'], "id": id, "sign": sign});
+    print(response);
+    // 返回
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,14 +107,20 @@ class _AddressListPageState extends State<AddressListPage> {
                         SizedBox(height: 20),
                         ListTile(
                           leading: Icon(Icons.check, color: Colors.red),
-                          title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                    "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
-                                SizedBox(height: 10),
-                                Text("${this.addressList[index]["address"]}"),
-                              ]),
+                          title: InkWell(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                      "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
+                                  SizedBox(height: 10),
+                                  Text("${this.addressList[index]["address"]}"),
+                                ]),
+                            onTap: () {
+                              this._changeDefaultAddress(
+                                  this.addressList[index]["_id"]);
+                            },
+                          ),
                           trailing: Icon(Icons.edit, color: Colors.blue),
                         ),
                         Divider(height: 20),
@@ -93,14 +131,20 @@ class _AddressListPageState extends State<AddressListPage> {
                       children: <Widget>[
                         SizedBox(height: 20),
                         ListTile(
-                          title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                    "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
-                                SizedBox(height: 10),
-                                Text("${this.addressList[index]["address"]}"),
-                              ]),
+                          title: InkWell(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                      "${this.addressList[index]["name"]}  ${this.addressList[index]["phone"]}"),
+                                  SizedBox(height: 10),
+                                  Text("${this.addressList[index]["address"]}"),
+                                ]),
+                            onTap: () {
+                              this._changeDefaultAddress(
+                                  this.addressList[index]["_id"]);
+                            },
+                          ),
                           trailing: Icon(Icons.edit, color: Colors.blue),
                         ),
                         Divider(height: 20),

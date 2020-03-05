@@ -27,6 +27,14 @@ class AddressEvent {
   }
 }
 
+//结算页面 修改默认地址
+class CheckOutEvent{
+  String str;
+  CheckOutEvent(String str){
+    this.str=str;
+  }
+}
+
 // 多个类
 // class ProductContentEvent2 {
 //   String str;
